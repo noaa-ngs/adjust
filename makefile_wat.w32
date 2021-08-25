@@ -1,0 +1,81 @@
+#
+#  makefile for adjust - Win32 platform - WATCOM compiler
+#  "makefile_wat.w32 - 1.1 - 2007/11/20"
+#---------------------------------------------------------
+# WATCOM compiler options:
+#  wfc386.exe      the Win32 command-line compiler
+# 
+#  -bo             Run-time bounds check
+#  -d2             Full debugging information
+#  -q              Operate quietly
+#  -dep            Generate file dependancies
+#
+#---------------------------------------------------------------------
+FROOT    = C:\WATCOM
+FC       = $(FROOT)\binw\wfc386
+
+# Production
+# FFLAGS   = -bo
+# Testing and Development
+FFLAGS   = -d2 -bo -dep
+
+.for.obj  :
+	$(FC)  $[*.for   $(FFLAGS) 
+#-------------------------------------
+PGM      = adjust.exe
+
+# INCLUDES = &
+#   -I. 
+
+LIBS     = &
+  -L$(FROOT)\lib
+
+OBJECTS  = &
+  adjust.obj     &
+  afvc.obj       &
+  cmrhs2.obj     &
+  ezyplot.obj    &
+  getofilw.obj   &
+  hogk.obj       &
+  mods.obj       &
+  newhog.obj     &
+  newsubs.obj    &
+  obseqw.obj     &
+  rgps2.obj      &
+  rnneu.obj      &
+  subs1.obj      &
+  subs2.obj      &
+  sysdep_w.obj   &
+  tolgh2.obj     &
+  upcov.obj      &
+  vfcgps.obj     &
+
+
+#-------------------------------------
+$(PGM)  :  $(OBJECTS)
+	wlink name $[* d all SYS nt op m op maxe=25 op q op symf @adjust.lk1
+
+adjust.obj         : adjust.for      .AUTODEPEND
+getofilw.obj       : getofilw.for    .AUTODEPEND
+mods.obj           : mods.for        .AUTODEPEND
+subs1.obj          : subs1.for       .AUTODEPEND
+subs2.obj          : subs2.for       .AUTODEPEND
+sysdep_w.obj       : sysdep_w.for    .AUTODEPEND
+afvc.obj           : afvc.for        .AUTODEPEND
+cmrhs2.obj         : cmrhs2.for      .AUTODEPEND
+ezyplot.obj        : ezyplot.for     .AUTODEPEND
+hogk.obj           : hogk.for        .AUTODEPEND
+newhog.obj         : newhog.for      .AUTODEPEND
+newsubs.obj        : newsubs.for     .AUTODEPEND
+obseqw.obj         : obseqw.for      .AUTODEPEND
+rgps2.obj          : rgps2.for       .AUTODEPEND
+rnneu.obj          : rnneu.for       .AUTODEPEND
+tolgh2.obj         : tolgh2.for      .AUTODEPEND
+upcov.obj          : upcov.for       .AUTODEPEND
+vfcgps.obj         : vfcgps.for      .AUTODEPEND
+
+
+clean:
+	erase core
+	erase *.o
+

@@ -1,0 +1,192 @@
+<project name="adjust" default="deploy" >
+    <property file="/ngs/projects/database/conf/ngsidb_ant_build.properties"/>
+    <property name="exe_name" value="adjust"/>
+    <property name="exe_name.w" value="${exe_name}.w"/>
+    <property name="destbindir" location="${BLUEBOOKDIR}/bin" />
+    <property name="WRAPPER" value="${BLUEBOOKDIR}/scripts/${WRAPPER_SCRIPT}" />
+    <property name="build" location="build"/>
+    <property name="obj" location="${build}/obj"/>
+    <property name="executable" location="${destbindir}/${exe_name.w}"/>
+    <taskdef resource="cpptasks.tasks"/>
+
+    <!-- set the operating system test properties -->
+    <condition property="isWindows">
+      <os family="windows" />
+    </condition>
+
+    <condition property="isUnix">
+      <os family="unix" />
+    </condition>
+
+    <!-- create directories for build and obj-->
+    <target name="init" if="isUnix">
+      <mkdir dir="${build}"/>
+      <mkdir dir="${obj}"/>
+      <mkdir dir="${destbindir}/backup" />
+    </target>
+    <!-- compile C-modules-->
+    <target name="c_compile" depends="f_compile" if="isUnix">
+        <cc name="cc" subsystem="console" objdir="${obj}" warnings="none">
+           <compilerarg value="-g" if="debug" />
+           <compilerarg value="-DSolaris" />
+        </cc>
+    </target>
+    <!-- compile Fotran-modules-->
+    <target name="f_compile" depends="init" if="isUnix">
+      <cc name="f77" objdir="${obj}" subsystem="console">
+           <compilerarg value="-g" if="debug" />
+           <compilerarg value="-e" />
+           <compilerarg value="-DSolaris" />
+           <compilerarg value="-DNGS_UNIX_ENV" />
+           <compilerarg value="-fpp" />
+           <fileset dir=".">
+              <include name="adjust.for" />
+              <include name="mods.for" />
+              <include name="subs1.for" />
+              <include name="subs2.for" />
+              <include name="fortlib3/afvc.for" />
+              <include name="fortlib3/cmrhs2.for" />
+              <include name="fortlib3/ezyplot.for" />
+              <include name="fortlib3/getofil_ux.for" />
+              <include name="fortlib3/hogk.for" />
+              <include name="fortlib3/newhog.for" />
+              <include name="fortlib3/newsubs.for" />
+              <include name="fortlib3/obseqw.for" />
+              <include name="fortlib3/rgps2.for" />
+              <include name="fortlib3/rnneu.for" />
+              <include name="fortlib3/sysdep_ux.for" />
+              <include name="fortlib3/tmisc.for" />
+              <include name="fortlib3/tolgh2.for" />
+              <include name="fortlib3/upcov.for" />
+              <include name="fortlib3/vfcgps.for" />
+           </fileset>
+           <includepath >
+             <pathelement location="."/>
+             <pathelement location="${SYBASE_HOME}/include"/>
+             <pathelement location="./inclib2"/>
+             <pathelement location="./inclib3"/>
+           </includepath>
+      </cc>
+    </target>
+    <!-- link objects and make executable-->
+    <target name="linkallunix" depends="c_compile" if="isUnix">
+       <antcall target="backupapp"/>
+       <cc name="f77" outtype="executable" subsystem="console" outfile="${executable}">
+         <fileset dir="${obj}" includes="*.o"/>
+         <libset dir="${USR_HOME}/lib" libs="nsl,m,socket,dl" />
+       </cc>
+    </target>
+    <target name="linkallwindows" if="isWindows">
+        <exec executable="Q:\shared\SDD\Software_Downloads\MinGW\bin\g77" >
+           <arg value="-xf77-cpp-input" />
+           <arg value="-Wall" />
+           <arg value="-ffortran-bounds-check" />
+           <arg value="adjust.for" />
+           <arg value="mods.for" />
+           <arg value="subs1.for" />
+           <arg value="subs2.for" />
+           <arg value="fortlib3/afvc.for" />
+           <arg value="fortlib3/cmrhs2.for" />
+           <arg value="fortlib3/ezyplot.for" />
+           <arg value="fortlib3/getofil_ux.for" />
+           <arg value="fortlib3/hogk.for" />
+           <arg value="fortlib3/newhog.for" />
+           <arg value="fortlib3/newsubs.for" />
+           <arg value="fortlib3/obseqw.for" />
+           <arg value="fortlib3/rgps2.for" />
+           <arg value="fortlib3/rnneu.for" />
+           <arg value="fortlib3/sysdep_g77.for" />
+           <arg value="fortlib3/tolgh2.for" />
+           <arg value="fortlib3/upcov.for" />
+           <arg value="fortlib3/vfcgps.for" />
+           <arg value="-o" />
+           <arg  value="adjust" />
+         </exec>
+   </target>
+
+   <!-- define our main/default target -->
+   <target name="linkall" depends="linkallunix,linkallwindows">
+    <echo message="Operating System: ${os.name}" />
+   </target>
+
+    <target name="deploy" depends="linkall" if="isUnix">
+      <!-- Move executable to deployment directory -->
+      <!-- dev server exe is in build directory -->
+      <!-- test/prod exe is moved to /ngs/projects/bluebook/bin -->
+         <chmod file="${executable}" perm="775" />
+         <antcall target="changegroup"/>
+         <exec executable="ln" >
+            <arg value="-s" />
+            <arg value="${WRAPPER}" />
+            <arg value="${destbindir}/${exe_name}" />
+         </exec>
+         <antcall target="zip"/>
+         <exec executable="banner" >
+            <arg value="${NGS_SERVERENV}" />            
+         </exec>
+         <echo message="Application deployed to ${destbindir}/${exe_name.w}" />
+    </target>
+    <!-- Change group to ngssdd in TEST and PROD only -->
+    <target name="changegroup" unless="DEV" if="isUnix">
+         <exec executable="chgrp"  >
+           <arg value="-f" />
+           <arg value="${RELTEAM_UNXGRP}" />
+           <arg value="${executable}" />
+         </exec>
+    </target>
+    <!-- backup the executable only in production environment -->
+    <target name="backupapp" if="PROD,isUnix">
+         <tstamp/>
+         <exec executable="mv" >
+            <arg value="${destbindir}/${exe_name.w}" />
+            <arg value="${destbindir}/backup/${exe_name.w}_${DSTAMP}${TSTAMP}" />
+         </exec>
+    </target>
+    <target name="clean" if="isUnix">
+         <exec executable="rm"  >
+           <arg value="-rf" />
+           <arg value="${obj}" />
+         </exec>
+    </target>
+
+    <target name="zip" if="isUnix">
+         <exec executable="zip"  >
+           <arg value="-Dl" />
+           <arg value="-j" />
+           <arg value="adjust" />
+           <arg value="adjust.for" />
+           <arg value="mods.for" />
+           <arg value="subs1.for" />
+           <arg value="subs2.for" />
+           <arg value="makefile_g77.w32" />
+           <arg value="makefile_wat.w32" />
+           <arg value="fortlib3/afvc.for" />
+           <arg value="fortlib3/cmrhs2.for" />
+           <arg value="fortlib3/ezyplot.for" />
+           <arg value="fortlib3/getofil_ux.for" />
+           <arg value="fortlib3/hogk.for" />
+           <arg value="fortlib3/newhog.for" />
+           <arg value="fortlib3/newsubs.for" />
+           <arg value="fortlib3/obseqw.for" />
+           <arg value="fortlib3/rgps2.for" />
+           <arg value="fortlib3/rnneu.for" />
+           <arg value="fortlib3/sysdep_g77.for" />
+           <arg value="fortlib3/sysdep_pc.for" />
+           <arg value="fortlib3/sysdep_ux.for" />
+           <arg value="fortlib3/sysdep_w.for" />
+           <arg value="fortlib3/tmisc.for" />
+           <arg value="fortlib3/tolgh2.for" />
+           <arg value="fortlib3/upcov.for" />
+           <arg value="fortlib3/vfcgps.for" />
+           <arg value="build.xml" />
+         </exec>
+         <exec executable="zip"  >
+           <arg value="-D" />
+           <arg value="-j" />
+           <arg value="-g" />
+           <arg value="adjust" />
+           <arg value="adjust.exe" />
+         </exec>
+    </target>
+</project>
+

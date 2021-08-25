@@ -1,0 +1,93 @@
+#
+#  makefile for adjust - Win32 platform - G77 compiler
+#  "makefile_g77.w32 - 1.2 - 2008/10/02"
+#---------------------------------------------------------
+# g77 compiler options:
+#  -Wimplicit       Warn if variable, array or function is implicitly declared
+#  -Wuninitialized  Warn if automatic variable is not initialized
+#  -Wunused         Warn if variable is not used
+#  -Wall            Combine -Wuninitialized and -Wunused
+#  -Wsurprising     Warn about "suspicious" constructs
+#  -W               Turn on "extra warnings"
+#  -g               Produce debugging information
+#  -fbounds-check
+#  -ffortran-bounds-check
+#                   Enable generation of run-time checks for array subscripts
+#                   and substring start and end points against the (locally)
+#                   declared minimum and maximum values
+#  -ff77            Specify FORTRAN-77 dialect
+#  -ff90            Specify FORTRAN-90 dialect
+#
+#---------------------------------------------------------------------
+FROOT    = C:\\MinGW
+FC       = $(FROOT)\\bin\\g77.exe
+
+.SUFFIXES: .for
+
+# Production
+# FFLAGS   =
+# Testing and Development
+FFLAGS   = -g -fbounds-check -Wall
+
+.for.o  :
+	$(FC) $(FFLAGS) $(INCLUDES) -c $<
+#-------------------------------------
+PGM      = adjust.exe
+
+INCLUDES = \
+  -I. 
+
+HEADERS  = \
+
+LIBS     = \
+  -L$(FROOT)\\lib
+
+OBJECTS  = \
+  adjust.o  \
+  afvc.o    \
+  cmrhs2.o  \
+  ezyplot.o \
+  getofil_ux.o \
+  hogk.o    \
+  mods.o    \
+  newhog.o  \
+  newsubs.o \
+  obseqw.o  \
+  rgps2.o   \
+  rnneu.o   \
+  subs1.o   \
+  subs2.o   \
+  sysdep_g77.o \
+  tolgh2.o  \
+  upcov.o   \
+  vfcgps.o  \
+
+
+#-------------------------------------
+$(PGM)  :  $(OBJECTS)
+	$(FC) $(FFLAGS) -o $@  $(OBJECTS) $(LIBS)
+
+adjust.o           : adjust.for
+getofil_ux.o       : getofil_ux.for
+mods.o             : mods.for
+subs1.o            : subs1.for
+subs2.o            : subs2.for
+sysdep_g77.o       : sysdep_g77.for
+afvc.o             : afvc.for
+cmrhs2.o           : cmrhs2.for
+ezyplot.o          : ezyplot.for
+hogk.o             : hogk.for
+newhog.o           : newhog.for
+newsubs.o          : newsubs.for
+obseqw.o           : obseqw.for
+rgps2.o            : rgps2.for
+rnneu.o            : rnneu.for
+tolgh2.o           : tolgh2.for
+upcov.o            : upcov.for
+vfcgps.o           : vfcgps.for
+
+
+clean:
+	erase core
+	erase *.o
+
