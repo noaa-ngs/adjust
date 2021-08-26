@@ -35,4 +35,3 @@ C      SCCSID='$Id: getofil_ux.for 44197 2010-07-13 12:26:03Z bruce.tran $	20$Da
 C
       RETURN
       END
-

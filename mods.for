@@ -1205,8 +1205,8 @@ C-------------------------------------------------------------------------------
       DIMENSION B(*)
       CHARACTER*80 BCARD
       CHARACTER*80 BBOOK, AFILE, GFILE, DFILE, BBNAM
-      CHARACTER*7 ADJFIL, NAFILE
-      CHARACTER*2 BBID,JCODE
+      CHARACTER*7  ADJFIL, NAFILE
+      CHARACTER*2  BBID,JCODE
       LOGICAL LSS, LUP, LMSL, LABS, LADJ, LUPI
       COMMON /NAME/   BBOOK, AFILE, GFILE, DFILE, BBNAM, ADJFIL, NAFILE
       COMMON /STRUCT/ NSTA, NAUX, NUNK, IDIM, NSTAS, NOBS, NCON, NZ,NGRT
@@ -1230,7 +1230,8 @@ C-------------------------------------------------------------------------------
 
       parameter  (MXSSN = 9999)
       LOGICAL    overwrite_const_coord_in_newbb
-      character  CC_records*80
+      LOGICAL    un_constrained_Hz,un_constrained_HT
+      character  CC_records*80,lat_lon_char*25,HT_char*7,HT_type*1
       COMMON/MM6/overwrite_const_coord_in_newbb
       COMMON/MM6_array/CC_records(MXSSN)
 
@@ -1310,6 +1311,85 @@ C  Changes to the newbb file
 *    5 FORMAT ('0UPDATED CONTROL POINT RECORDS IN FILE -- ', A40)
     5 FORMAT ('0UPDATED CONTROL POINT RECORDS IN FILE -- ', A80)
     
+**v6.3
+
+C  Now that the output bfile is completed, rewind it and overwrite it with the constrained values
+C  for constrained points. Keep it the same for unconstrained points.
+
+      if (overwrite_const_coord_in_newbb) then
+
+*** OPEN NEW BLUE BOOK again
+
+        INEW = 15
+        OPEN (INEW,ERR=667,STATUS='UNKNOWN',FILE=BBNAM)
+        ITMP = 14
+        open (ITMP,ERR=667,STATUS='UNKNOWN',FILE='TMP')
+
+C  Read NEWBB records one by one
+
+  101   READ (INEW,'(a80)',END=6681) BCARD
+        READ (BCARD,4) BBID
+
+        IF (BBID .EQ. '80') THEN
+          READ (BCARD,'(10x,i4)') ISSN
+          do ii=1,MXSSN
+            read (CC_records(ii)(11:14),'(i4)') iissn
+            if (ISSN == iissn) then
+              read(CC_records(ii)(45:69),'(a25)') lat_lon_char
+              un_constrained_Hz = (lat_lon_char == ' ')
+              if (.not. un_constrained_Hz) then
+                BCARD(45:69) = CC_records(ii)(45:69)
+                exit
+              endif
+            endif
+          enddo
+          write (ITMP,'(a80)') BCARD
+        ELSEIF (BBID .EQ. '86') THEN
+          READ (BCARD,'(10x,i4)') ISSN
+          do ii=1,MXSSN
+            read (CC_records(ii)(11:14),'(i4)') iissn
+            if (ISSN == iissn) then
+              read(CC_records(ii)(70:76),'(a7)') HT_char
+              read(CC_records(ii)(77:77),'(a1)') HT_type
+              un_constrained_HT = (HT_char == ' ')
+              if((.not. un_constrained_HT) .and. HT_type== "E") then          !The station is constrained includin the height
+                BCARD(46:52) = CC_records(ii)(70:76)
+                exit
+              elseif((.not. un_constrained_HT).and.HT_type==" ") then          !The station is constrained includin the height
+                BCARD(17:23) = CC_records(ii)(70:76)
+                exit
+              endif
+            endif
+          enddo
+          write (ITMP,'(a80)') BCARD
+        ELSE
+          write (ITMP,'(a80)') BCARD
+        ENDIF
+ 
+        GO TO 101
+
+ 6681   CLOSE (INEW)
+        CLOSE (ITMP)
+
+C  Now just overwrite INEW by ITMP
+
+        INEW = 15
+        OPEN (INEW,ERR=667,STATUS='UNKNOWN',FILE=BBNAM)
+        ITMP = 14
+        open (ITMP,ERR=667,STATUS='UNKNOWN',FILE='TMP')
+
+c  Read TMP records one by one and overwrite NEWBB
+
+  102   READ (ITMP,'(a80)',END=6682) BCARD
+        write(INEW,'(a80)'         ) BCARD
+        goto 102
+ 6682   CLOSE (INEW)
+c       CLOSE (ITMP)
+        CLOSE (ITMP,status="DELETE")
+      endif
+
+***so far for v6.3
+
       RETURN
 
 *** NO OLD BLUE BOOK FOUND

@@ -346,7 +346,7 @@ C*******************************************************************************
       CHARACTER*30 NAMES, NAME1,NAME2
       CHARACTER*7 ADJFIL, NAFILE
       CHARACTER*1 ADIR1, ADIR2, ADX, ADY, AEHT
-      CHARACTER   dummy*10,dummy1*10,dashes*80
+      CHARACTER   dummy*10,dummy1*10
 
       real*8      MedH(MXSSN),MedV(MXSSN),MedD(MXSSN)  !for replacing the mean of the accuracies by their median
 
@@ -651,7 +651,6 @@ c         SLOCV=SLOCV+V95CM
  6202     FORMAT(' TABLE2 ERROR IS NLLIST',2I6)
           CALL ABORT2
         ENDIF
-        write (*,*) "NLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOCAL",NLOCAL
         IF (NLOCAL.GT.0) THEN
 c         AVELH=SLOCH/FLOAT(NLOCAL)
 c         AVELV=SLOCV/FLOAT(NLOCAL)
@@ -660,15 +659,12 @@ c         AVELV=SLOCV/FLOAT(NLOCAL)
           call MDIAN1(MedD,NLOCAL,Dmedian)
 c         WRITE (LUNIT,6030) AVELH,AVELV
 c         WRITE (LUNIT,6030) Hmedian,Vmedian 
-          dashes = "-------------------------------------------"
-          WRITE (NLUN5,6029) dashes
           WRITE (NLUN5,6030) Hmedian,Vmedian,Dmedian
           WRITE (NLUN5,*) '   '
 c       else
 c         WRITE (NLUN5,*) '   '
         ENDIF
 c6030   FORMAT(T42,'LOCAL AVERAGE',T100,2F8.2)
- 6029   FORMAT(a80)                                                     
  6030   FORMAT(T1,'MEDIAN OF LOCAL ACCURACY',T51,2F8.2,1x,'CM',f8.2,1x,
      &         'KM')
 
@@ -1367,12 +1363,23 @@ C*******************************************************************************
       implicit integer (i-n)
       parameter (MXSSN = 9999)
 
-      CHARACTER*80 BCARD
+      CHARACTER*80 BCARD,dashes
       LOGICAL      NLMODE,NLSCL
       
       real*8       distance                            
       real*8       dist(MXSSN)
       character    cards(MXSSN)*80
+
+**v6.3
+
+      LOGICAL    overwrite_const_coord_in_newbb
+      LOGICAL    un_constrained_Hz,un_constrained_HT
+      character  CC_records*80,lat_lon_char*25,HT_char*7
+      character  BBID*2                                     
+      COMMON/MM6/overwrite_const_coord_in_newbb
+      COMMON/MM6_array/CC_records(MXSSN)
+
+**So far for v6.3
 
       COMMON /NLOPT/ NLMODE,NLSCL,NLUN1,NLUN2,NLUN3,NLUN4,NLUN5
       COMMON/UNITS/ LUNIT
@@ -1385,6 +1392,9 @@ C*******************************************************************************
       OPEN(NLUN5,file='NLUN5',FORM='FORMATTED')
 
       ncount = 0
+      do i=1,80
+        dashes(i:i) = '-'
+      enddo
 
       REWIND NLUN2
   100 READ(NLUN2,'(a80)',ERR=666,END=700) BCARD
@@ -1411,6 +1421,7 @@ c     GO TO 103
       if (BCARD(1:6)==' LOCAL'.or.BCARD(1:4)=='FROM'.or.
      &    BCARD(1:6)=='      ') then
         WRITE(LUNIT,'(a80)') BCARD
+c       WRITE(LUNIT,'(a80)') dashes
       elseif (BCARD(1:4) == '  TO') then
         ncount = ncount + 1
         cards(ncount) = BCARD
@@ -1421,6 +1432,7 @@ c     GO TO 103
         do ii=1,ncount
           write (LUNIT,'(a80)') cards(ii)
         enddo
+        WRITE(LUNIT,'(a80)') dashes
         WRITE(LUNIT,'(a80)') BCARD
         ncount = 0
       endif
@@ -1432,24 +1444,24 @@ c     GO TO 103
       RETURN
 
 ***********3-3-04
-  703 close(nlun2)
-      close(nlun3)
-      close(nlun4)
-      close(nlun5)
+  703 close(nlun2,status="DELETE")
+      close(nlun3,status="DELETE")
+      close(nlun4,status="DELETE")
+      close(nlun5,status="DELETE")
 
 C  Delete scratch files
 
-#ifdef NGS_UNIX_ENV
-      call system ('rm NLUN2')
-      call system ('rm NLUN3')
-      call system ('rm NLUN4')
-      call system ('rm NLUN5')
-#else
-      call system ('del NLUN2')
-      call system ('del NLUN3')
-      call system ('del NLUN4')
-      call system ('del NLUN5')
-#endif
+c#ifdef NGS_UNIX_ENV
+c      call system ('rm NLUN2')
+c      call system ('rm NLUN3')
+c      call system ('rm NLUN4')
+c      call system ('rm NLUN5')
+c#else
+c      call system ('del NLUN2')
+c      call system ('del NLUN3')
+c      call system ('del NLUN4')
+c      call system ('del NLUN5')
+c#endif
 
       return
       END

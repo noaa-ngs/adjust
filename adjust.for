@@ -12,9 +12,9 @@
 *             IN THE NATIONAL GEODETIC SURVEY DATA BASE               *
 *             INPUT FORMATS (BLUE-BOOK, REVISED, JAN 1989 VERSION).   *
 *                                                                     *
-* VERSION CODE:  6.4   
+* VERSION CODE:  6.4.1 
 *                                                                     *
-* VERSION DATE:  (ccyy/mm/dd)  2015/05/26
+* VERSION DATE:  (ccyy/mm/dd)  2016/01/21
 *                                                                     *
 *       AUTHORS:   ALICE R. DREW                                      *
 *                  N/CG12X2                                           *
@@ -120,9 +120,9 @@
       LAWORK = LENA
 
 *** DEFINE CONSTANTS
-      SCCSID='@(#)adjust.for	6.4 	2015/05/26 NGS'
-      PGMVER='6.4'
-      PGMDAT='2015/05/26'
+      SCCSID='@(#)adjust.for	6.4.1 	2016/01/21 NGS'
+      PGMVER='6.4.1'
+      PGMDAT='2016/01/21'
 
       PI2 = 2.D0*DATAN(1.D0)
       PI = 2.D0*PI2

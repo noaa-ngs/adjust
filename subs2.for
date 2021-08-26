@@ -9843,7 +9843,7 @@ C-------------------------------------------------------------------------------
       IF ( GETSSN(ISSN, ISN) ) THEN
         IF (IDIM .NE. 1) THEN
 **v6.3
-          if (.not. overwrite_const_coord_in_newbb) then
+c         if (.not. overwrite_const_coord_in_newbb) then
 **so far for v6.3
             CALL GETGLA (GLAT, ISN, B)
             CALL GETGLO (GLON, ISN, B)
@@ -9888,19 +9888,19 @@ C-------------------------------------------------------------------------------
             BCARD(69:69) = ADIR2
 **v6.3
 
-          else
-            do ii=1,MXSSN
-              read (CC_records(ii)(11:14),'(i4)') iissn
-              if (ISSN == iissn) then               
-                read(CC_records(ii)(45:69),'(a25)') lat_lon_char
-                un_constrained_Hz = (lat_lon_char == ' ')
-                if (.not. un_constrained_Hz) then
-                  BCARD(45:69) = CC_records(ii)(45:69)
-                  exit
-                endif
-              endif
-            enddo
-          endif
+c         else
+c           do ii=1,MXSSN
+c             read (CC_records(ii)(11:14),'(i4)') iissn
+c             if (ISSN == iissn) then               
+c               read(CC_records(ii)(45:69),'(a25)') lat_lon_char
+c               un_constrained_Hz = (lat_lon_char == ' ')
+c               if (.not. un_constrained_Hz) then
+c                 BCARD(45:69) = CC_records(ii)(45:69)
+c                 exit
+c               endif
+c             endif
+c           enddo
+c         endif
 
 **so far for v6.3
 
@@ -10005,8 +10005,9 @@ C-------------------------------------------------------------------------------
     1 FORMAT (10X, I4)
       IF (GETSSN(ISSN, ISN) ) THEN
 **v6.3
-        if (.not. overwrite_const_coord_in_newbb) then
+c       if (.not. overwrite_const_coord_in_newbb) then
 **so far for v6.3
+
           CALL GETMSL (GMSL0, ISN, B)
           CALL GETGH (GHT0, ISN, B)
           IF (L2HLF  .AND.  I2HLF(ISN) .EQ. 1) THEN
@@ -10036,19 +10037,19 @@ C-------------------------------------------------------------------------------
           BCARD(46:52) = AEHT
 **v6.3
 
-        else
-          do ii=1,MXSSN
-            read (CC_records(ii)(11:14),'(i4)') iissn
-            if (ISSN == iissn) then               
-              read(CC_records(ii)(70:76),'(a7)') HT_char
-              un_constrained_HT = (HT_char == ' ')
-              if(.not. un_constrained_HT) then          !The station is constrained includin the height
-                BCARD(46:52) = CC_records(ii)(70:76)
-                exit
-              endif
-            endif
-          enddo
-        endif
+c       else
+c         do ii=1,MXSSN
+c           read (CC_records(ii)(11:14),'(i4)') iissn
+c           if (ISSN == iissn) then               
+c             read(CC_records(ii)(70:76),'(a7)') HT_char
+c             un_constrained_HT = (HT_char == ' ')
+c             if(.not. un_constrained_HT) then          !The station is constrained includin the height
+c               BCARD(46:52) = CC_records(ii)(70:76)
+c               exit
+c             endif
+c           endif
+c         enddo
+c       endif
 
 **so far for v6.3
 

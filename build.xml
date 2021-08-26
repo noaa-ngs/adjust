@@ -77,7 +77,7 @@
        </cc>
     </target>
     <target name="linkallwindows" if="isWindows">
-        <exec executable="Q:\shared\SDD\Software_Downloads\MinGW\bin\g77" >
+        <exec executable="g77" >
            <arg value="-xf77-cpp-input" />
            <arg value="-Wall" />
            <arg value="-ffortran-bounds-check" />
@@ -85,20 +85,20 @@
            <arg value="mods.for" />
            <arg value="subs1.for" />
            <arg value="subs2.for" />
-           <arg value="fortlib3/afvc.for" />
-           <arg value="fortlib3/cmrhs2.for" />
-           <arg value="fortlib3/ezyplot.for" />
-           <arg value="fortlib3/getofil_ux.for" />
-           <arg value="fortlib3/hogk.for" />
-           <arg value="fortlib3/newhog.for" />
-           <arg value="fortlib3/newsubs.for" />
-           <arg value="fortlib3/obseqw.for" />
-           <arg value="fortlib3/rgps2.for" />
-           <arg value="fortlib3/rnneu.for" />
-           <arg value="fortlib3/sysdep_g77.for" />
-           <arg value="fortlib3/tolgh2.for" />
-           <arg value="fortlib3/upcov.for" />
-           <arg value="fortlib3/vfcgps.for" />
+           <arg value="afvc.for" />
+           <arg value="cmrhs2.for" />
+           <arg value="ezyplot.for" />
+           <arg value="getofil_ux.for" />
+           <arg value="hogk.for" />
+           <arg value="newhog.for" />
+           <arg value="newsubs.for" />
+           <arg value="obseqw.for" />
+           <arg value="rgps2.for" />
+           <arg value="rnneu.for" />
+           <arg value="sysdep_g77.for" />
+           <arg value="tolgh2.for" />
+           <arg value="upcov.for" />
+           <arg value="vfcgps.for" />
            <arg value="-o" />
            <arg  value="adjust" />
          </exec>

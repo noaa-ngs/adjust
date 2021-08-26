@@ -596,124 +596,124 @@ c           write (LUNIT,*) 'TEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEZ'
 
 **v6.3 Replace adjusted coordinates by constrained ones in the ADJUST output file
 
-          if (overwrite_const_coord_in_newbb) then
-            do ii=1,MXSSN
-              if (CC_records(ii)(1:2) == 'CC') then
-                read (CC_records(ii)(11:14),'(i4)') iissn
-                if (ISSN == iissn) then
-                  read(CC_records(ii)(45:69),'(a25)') lat_lon_char
-                  read(CC_records(ii)(70:76),'(a7)') HT_char
-                  un_constrained_Hz = (lat_lon_char == ' ')
-                  un_constrained_HT = (HT_char      == ' ')
+c         if (overwrite_const_coord_in_newbb) then
+c           do ii=1,MXSSN
+c             if (CC_records(ii)(1:2) == 'CC') then
+c               read (CC_records(ii)(11:14),'(i4)') iissn
+c               if (ISSN == iissn) then
+c                 read(CC_records(ii)(45:69),'(a25)') lat_lon_char
+c                 read(CC_records(ii)(70:76),'(a7)') HT_char
+c                 un_constrained_Hz = (lat_lon_char == ' ')
+c                 un_constrained_HT = (HT_char      == ' ')
 
-                  if (.not. un_constrained_Hz) then
-                    if(.not. un_constrained_HT) then          !The station is constrained includin the height
-                      read(CC_records(ii)(45:76),301) 
-     &                ID1,IM1,la_s1,la_s2,ID2,IM2,lo_s1,lo_s2,iEHT
-                      do iii=1,7
-                        if(la_s1(iii:iii)==' ') la_s1(iii:iii)='0'
-                        if(lo_s1(iii:iii)==' ') lo_s1(iii:iii)='0'
-                      enddo
-                      read (la_s1,'(f7.5)') s1
-                      read (lo_s1,'(f7.5)') s2
-
-C  Latitude
-
-                      if (la_s2 == 'N') then
-                        dlat = ID1+(IM1/60.D0)+(S1/3600.D0)
-                      else
-                        dlat = -(ID1+(IM1/60.D0)+(S1/3600.D0))
-                      endif
-                      glat  = dlat/RAD
-                      ADIR1 = la_s2
-
-C  Longitude
-
-                      if (lo_s2 == 'W') then
-                        dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
-                      else
-                        ALONGD=ID2+(IM2/60.D0)+(S2/3600.D0)
-                        ALONGD=360.D0-ALONGD
-                        ID2=INT(ALONGD)
-                        ALONGM=(ALONGD-ID2) * 60.D0
-                        IM2=INT(ALONGM)
-                        S2=(ALONGM-IM2) * 60.D0
-                        dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
-                        lo_s2 = 'W'
-                      endif
-                      glon = (360.d0 - dlon)/RAD
-                      ADIR2 = lo_s2
-
-C  Height
-
-                      EHT = 0.001d0*iEHT
-
-C  Cartesian coordinates
-
-                      call TOXYZ (GLAT,GLON,EHT,XPOS,YPOS,ZPOS)
-
-                      exit
-                    else         !The station's Hz position is constrained but not the height 
-                      read(CC_records(ii)(45:76),301) 
-     &                ID1,IM1,la_s1,la_s2,ID2,IM2,lo_s1,lo_s2
-                      do iii=1,7
-                        if(la_s1(iii:iii)==' ') la_s1(iii:iii)='0'
-                        if(lo_s1(iii:iii)==' ') lo_s1(iii:iii)='0'
-                      enddo
-                      read (la_s1,'(f7.5)') s1
-                      read (lo_s1,'(f7.5)') s2
+c                 if (.not. un_constrained_Hz) then
+c                   if(.not. un_constrained_HT) then          !The station is constrained includin the height
+c                     read(CC_records(ii)(45:76),301) 
+c    &                ID1,IM1,la_s1,la_s2,ID2,IM2,lo_s1,lo_s2,iEHT
+c                     do iii=1,7
+c                       if(la_s1(iii:iii)==' ') la_s1(iii:iii)='0'
+c                       if(lo_s1(iii:iii)==' ') lo_s1(iii:iii)='0'
+c                     enddo
+c                     read (la_s1,'(f7.5)') s1
+c                     read (lo_s1,'(f7.5)') s2
 
 C  Latitude
 
-                      if (la_s2 == 'N') then
-                        dlat = ID1+(IM1/60.D0)+(S1/3600.D0)
-                      else
-                        dlat = -(ID1+(IM1/60.D0)+(S1/3600.D0))
-                      endif
-                      glat   = dlat/RAD
-                      ADIR1  = la_s2
+c                     if (la_s2 == 'N') then
+c                       dlat = ID1+(IM1/60.D0)+(S1/3600.D0)
+c                     else
+c                       dlat = -(ID1+(IM1/60.D0)+(S1/3600.D0))
+c                     endif
+c                     glat  = dlat/RAD
+c                     ADIR1 = la_s2
 
 C  Longitude
 
-                      if (lo_s2 == 'W') then
-                        dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
-                      else
-                        ALONGD=ID2+(IM2/60.D0)+(S2/3600.D0)
-                        ALONGD=360.D0-ALONGD
-                        ID2=INT(ALONGD)
-                        ALONGM=(ALONGD-ID2) * 60.D0
-                        IM2=INT(ALONGM)
-                        S2=(ALONGM-IM2) * 60.D0
-                        dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
-                        lo_s2 = 'W'
-                      endif
-                      glon = (360.d0 - dlon)/RAD
-                      ADIR2 = lo_s2
+c                     if (lo_s2 == 'W') then
+c                       dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
+c                     else
+c                       ALONGD=ID2+(IM2/60.D0)+(S2/3600.D0)
+c                       ALONGD=360.D0-ALONGD
+c                       ID2=INT(ALONGD)
+c                       ALONGM=(ALONGD-ID2) * 60.D0
+c                       IM2=INT(ALONGM)
+c                       S2=(ALONGM-IM2) * 60.D0
+c                       dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
+c                       lo_s2 = 'W'
+c                     endif
+c                     glon = (360.d0 - dlon)/RAD
+c                     ADIR2 = lo_s2
 
-C  Height
+c  Height
 
-                      !EHT = EHT      Take the adjusted ellipsoidal height of the station
+c                     EHT = 0.001d0*iEHT
 
-C  Cartesian coordinates
+c  Cartesian coordinates
 
-                      call TOXYZ (GLAT,GLON,EHT,XPOS,YPOS,ZPOS)
+c                     call TOXYZ (GLAT,GLON,EHT,XPOS,YPOS,ZPOS)
 
-                      exit
-                    endif
-                  else
-                    read(CC_records(ii)(70:76),'(i7)') iEHT
-                    EHT = 0.001d0*iEHT
-                    !glat and glon are the adjusted ones
-                    call TOXYZ (GLAT,GLON,EHT,XPOS,YPOS,ZPOS)
-                    exit
-                  endif
-                endif
-              else
-                cycle
-              endif
-            enddo
+c                     exit
+c                   else         !The station's Hz position is constrained but not the height 
+c                     read(CC_records(ii)(45:76),301) 
+c    &                ID1,IM1,la_s1,la_s2,ID2,IM2,lo_s1,lo_s2
+c                     do iii=1,7
+c                       if(la_s1(iii:iii)==' ') la_s1(iii:iii)='0'
+c                       if(lo_s1(iii:iii)==' ') lo_s1(iii:iii)='0'
+c                     enddo
+c                     read (la_s1,'(f7.5)') s1
+c                     read (lo_s1,'(f7.5)') s2
+
+c  Latitude
+
+c                     if (la_s2 == 'N') then
+c                       dlat = ID1+(IM1/60.D0)+(S1/3600.D0)
+c                     else
+c                       dlat = -(ID1+(IM1/60.D0)+(S1/3600.D0))
+c                     endif
+c                     glat   = dlat/RAD
+c                     ADIR1  = la_s2
+
+c  Longitude
+
+c                     if (lo_s2 == 'W') then
+c                       dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
+c                     else
+c                       ALONGD=ID2+(IM2/60.D0)+(S2/3600.D0)
+c                       ALONGD=360.D0-ALONGD
+c                       ID2=INT(ALONGD)
+c                       ALONGM=(ALONGD-ID2) * 60.D0
+c                       IM2=INT(ALONGM)
+c                       S2=(ALONGM-IM2) * 60.D0
+c                       dlon = ID2+(IM2/60.D0)+(S2/3600.D0)
+c                       lo_s2 = 'W'
+c                     endif
+c                     glon = (360.d0 - dlon)/RAD
+c                     ADIR2 = lo_s2
+
+c  Height
+
+c                     !EHT = EHT      Take the adjusted ellipsoidal height of the station
+
+c  Cartesian coordinates
+
+c                     call TOXYZ (GLAT,GLON,EHT,XPOS,YPOS,ZPOS)
+
+c                     exit
+c                   endif
+c                 else
+c                   read(CC_records(ii)(70:76),'(i7)') iEHT
+c                   EHT = 0.001d0*iEHT
+c                   !glat and glon are the adjusted ones
+c                   call TOXYZ (GLAT,GLON,EHT,XPOS,YPOS,ZPOS)
+c                   exit
+c                 endif
+c               endif
+c             else
+c               cycle
+c             endif
+c           enddo
  301        format (2i2,a7,a1,i3,i2,a7,a1,i7)
-          endif
+c         endif
 
 **so far for v6.3
 
@@ -763,73 +763,73 @@ C  Cartesian coordinates
 **     were replaced (this is weighted constraints) by their constrained coordinates.
 
             icounter = 0
-            if (overwrite_const_coord_in_newbb) then
-              do ii=1,MXSSN
-                if (CC_records(ii)(1:2) == 'CC') then
-                  read (CC_records(ii)(11:14),'(i4)') iissn
-                  if (ISSN == iissn) then
-                    read(CC_records(ii)(45:69),'(a25)') lat_lon_char
-                    read(CC_records(ii)(70:76),'(a7)') HT_char
-                    un_constrained_Hz = (lat_lon_char == ' ')
-                    un_constrained_HT = (HT_char      == ' ')
-                    if (.not. un_constrained_Hz) then
-                      if(.not. un_constrained_HT) then          !The station is constrained includin the height
-                        icounter = icounter + 1
-                        CHAR_DX  = '********' 
-                        CHAR_ADX = '*'
-                        CHAR_DY  = '********' 
-                        CHAR_ADY = '*'
-                        CHAR_DZ  = '********' 
-                        CHAR_IAZ = '***'
-                        CHAR_DH  = '*******' 
-                        CHAR_TOT = '*******' 
-                        IF (LAP) then
-                          WRITE(LUNIT,41) CHAR_DX,CHAR_ADX,CHAR_DY,
-     &                                    CHAR_ADY,CHAR_DZ,CHAR_IAZ, 
-     &                                    CHAR_DH, CHAR_TOT
- 41                       FORMAT(32X,'SHIFTS (M.)',4X,a8,A1,9X,a8,A1,
-     &                           22X,a8,' AZ=',a3,' H=',a7,' T=',a7)
-                        endif
-                        exit
-                      else
-                        icounter = icounter + 1
-                        CHAR_DX  = '********' 
-                        CHAR_ADX = '*'
-                        CHAR_DY  = '********' 
-                        CHAR_ADY = '*'
-                        CHAR_IAZ = '***'
-                        CHAR_DH  = '*******' 
-                        DTOT     = DZ                            
-                        IF (LAP) then
-                          WRITE(LUNIT,43) CHAR_DX,CHAR_ADX,CHAR_DY,
-     &                                    CHAR_ADY,DZ,CHAR_IAZ, 
-     &                                    CHAR_DH, DTOT
- 43                       FORMAT(32X,'SHIFTS (M.)',4X,a8,A1,9X,a8,A1,
-     &                        22X,f8.3,' AZ=',a3,' H=',a7,' T=',f7.3)
-                        endif
-                        exit
-                      endif
-                    else
-                      icounter = icounter + 1
-                      CHAR_DZ  = '********' 
-                      DTOT     = DSQRT(DX2 + DY2)
+c           if (overwrite_const_coord_in_newbb) then
+c             do ii=1,MXSSN
+c               if (CC_records(ii)(1:2) == 'CC') then
+c                 read (CC_records(ii)(11:14),'(i4)') iissn
+c                 if (ISSN == iissn) then
+c                   read(CC_records(ii)(45:69),'(a25)') lat_lon_char
+c                   read(CC_records(ii)(70:76),'(a7)') HT_char
+c                   un_constrained_Hz = (lat_lon_char == ' ')
+c                   un_constrained_HT = (HT_char      == ' ')
+c                   if (.not. un_constrained_Hz) then
+c                     if(.not. un_constrained_HT) then          !The station is constrained includin the height
+c                       icounter = icounter + 1
+c                       CHAR_DX  = '********' 
+c                       CHAR_ADX = '*'
+c                       CHAR_DY  = '********' 
+c                       CHAR_ADY = '*'
+c                       CHAR_DZ  = '********' 
+c                       CHAR_IAZ = '***'
+c                       CHAR_DH  = '*******' 
+c                       CHAR_TOT = '*******' 
+c                       IF (LAP) then
+c                         WRITE(LUNIT,41) CHAR_DX,CHAR_ADX,CHAR_DY,
+c    &                                    CHAR_ADY,CHAR_DZ,CHAR_IAZ, 
+c    &                                    CHAR_DH, CHAR_TOT
+c41                       FORMAT(32X,'SHIFTS (M.)',4X,a8,A1,9X,a8,A1,
+c    &                           22X,a8,' AZ=',a3,' H=',a7,' T=',a7)
+c                       endif
+c                       exit
+c                     else
+c                       icounter = icounter + 1
+c                       CHAR_DX  = '********' 
+c                       CHAR_ADX = '*'
+c                       CHAR_DY  = '********' 
+c                       CHAR_ADY = '*'
+c                       CHAR_IAZ = '***'
+c                       CHAR_DH  = '*******' 
+c                       DTOT     = DZ                            
+c                       IF (LAP) then
+c                         WRITE(LUNIT,43) CHAR_DX,CHAR_ADX,CHAR_DY,
+c    &                                    CHAR_ADY,DZ,CHAR_IAZ, 
+c    &                                    CHAR_DH, DTOT
+c43                       FORMAT(32X,'SHIFTS (M.)',4X,a8,A1,9X,a8,A1,
+c    &                        22X,f8.3,' AZ=',a3,' H=',a7,' T=',f7.3)
+c                       endif
+c                       exit
+c                     endif
+c                   else
+c                     icounter = icounter + 1
+c                     CHAR_DZ  = '********' 
+c                     DTOT     = DSQRT(DX2 + DY2)
 c--------+---------+---------+---------+---------+---------+---------+------------------------
-                      IF (LAP) then
-                        WRITE(LUNIT,42) DX,ADX,DY,ADY,CHAR_DZ,IAZ,DH,
-     &                                  DTOT
- 42                     FORMAT(32X,'SHIFTS (M.)',4X,f8.3,A1,9X,f8.3,A1,
-     &                         22X,a8,' AZ=',I3,' H=',f7.3,' T=',f7.3)
-                      endif
-                      exit
-                    endif
-                  else
-                    cycle
-                  endif
-                else
-                  cycle
-                endif
-              enddo
-            endif  
+c                     IF (LAP) then
+c                       WRITE(LUNIT,42) DX,ADX,DY,ADY,CHAR_DZ,IAZ,DH,
+c    &                                  DTOT
+c42                     FORMAT(32X,'SHIFTS (M.)',4X,f8.3,A1,9X,f8.3,A1,
+c    &                         22X,a8,' AZ=',I3,' H=',f7.3,' T=',f7.3)
+c                     endif
+c                     exit
+c                   endif
+c                 else
+c                   cycle
+c                 endif
+c               else
+c                 cycle
+c               endif
+c             enddo
+c           endif  
             if (icounter == 0) then
               IF (LAP) WRITE(LUNIT,4) DX,ADX,DY,ADY,DZ,IAZ,DH,DTOT
  4            FORMAT(32X,'SHIFTS (M.)',4X,F8.3,A1,9X,F8.3,A1,22X,
