@@ -29,7 +29,7 @@ C file $RCSfile: subs2.for,v $
       COMMON/UNITS/ LUNIT
       SAVE ITIME, IYR, IMO, IDY
 
-C      SCCSID='$Id: subs2.for 87172 2016-01-21 15:33:05Z jarir.saleh $	20$Date: 2008/10/27 17:18:38 $ NGS'
+C      SCCSID='$Id: subs2.for 107411 2018-10-30 14:54:00Z jarir.saleh $	20$Date: 2008/10/27 17:18:38 $ NGS'
 
       READ (BCARD,1) IRT,ISSN,LIST,JSSN,ID,IM,ASS
  1    FORMAT (7X,I2, 1X,I4,    I2,34X,I4, 9X,I3,I2,A4)
@@ -45,7 +45,7 @@ C      SCCSID='$Id: subs2.for 87172 2016-01-21 15:33:05Z jarir.saleh $	20$Date: 
         IF (BCARD(46:47) .EQ. '  ') IHR = 0
         IF (BCARD(48:49) .EQ. '  ') IMN = 0
         IF (BCARD(50:50) .EQ. ' ') TC = 'Z'
-	CALL GETYR(BCARD,IYR)
+        CALL GETYR(BCARD,IYR)
 *       IF (IYR .LT. 14) THEN
 *         IYR = IYR+2000
 *       ELSE
@@ -160,9 +160,9 @@ C-------------------------------------------------------------------------------
       IMPLICIT INTEGER (I-N)
  
       COMMON /CONST/  PI, PI2, RAD
-      COMMON /XLATE/  RX(36), RY(36), RZ(36), SCALE(36),
-     +             DELX(36), DELY(36), DELZ(36), COSRX(36), SINRX(36),
-     +             COSRY(36), SINRY(36), COSRZ(36), SINRZ(36)
+      COMMON /XLATE/  RX(37), RY(37), RZ(37), SCALE(37),
+     +             DELX(37), DELY(37), DELZ(37), COSRX(37), SINRX(37),
+     +             COSRY(37), SINRY(37), COSRZ(37), SINRZ(37)
      
       COMMON/UNITS/ LUNIT     
  
@@ -643,6 +643,21 @@ C-------------------------------------------------------------------------------
       DELY(36)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
       DELZ(36)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
 
+*** GPS GFILE CODE '37' IGb14 EPOCH 2010 (t0 = 2010.0) TO NAD83(2011)
+
+      RX(37)    = (26.78149969D0 + (0.06668632D0 * (T - 2010.0D0))) * AM
+      COSRX(37) = DCOS(RX(37))
+      SINRX(37) = DSIN(RX(37))
+      RY(37)    = (-0.42078254D0 - (0.75748704D0 * (T - 2010.0D0))) * AM
+      COSRY(37) = DCOS(RY(37))
+      SINRY(37) = DSIN(RY(37))
+      RZ(37)    = (10.93254252D0 - (0.05128851D0 * (T - 2010.0D0))) * AM
+      COSRZ(37) = DCOS(RZ(37))
+      SINRZ(37) = DSIN(RZ(37))
+      SCALE(37) = ( 0.36891D0 - (0.07201D0 * (T - 2010.0D0))) * 1.0D-9
+      DELX(37)  =  1.00530D0  + (0.00079D0 * (T - 2010.0D0))
+      DELY(37)  = -1.90921D0  - (0.00060D0 * (T - 2010.0D0))
+      DELZ(37)  = -0.54157D0  - (0.00144D0 * (T - 2010.0D0))
       
       RETURN
       END
@@ -1741,7 +1756,7 @@ c Mike Potterfield 2/13/06 now write the Reject Code for each vector
           ENDIF
 **v 4.28**********************
           SESS(IVC) = SESSID
-	  IVC = IVC + 1
+          IVC = IVC + 1
         IF(IVC.GT.MAXC) THEN
           WRITE(LUNIT,555) MAXC
  555      FORMAT(/ ' NUMBER OF SESSIONS EXCEED ',I5)
@@ -2084,7 +2099,7 @@ c Mike Potterfield 2/13/06 now write the Reject Code for each vector
         NR = 3*NVEC
 *       NC = NR + 3 + LENG
         NC = NR + 5 + LENG
-	
+
         READ (IUO,END=666) ICM, NICM, KINDS, ISNS, JSNS, LOBS
         CALL GLOCAT (N1, N2, N3, N4, N5, NVEC, LENG)
         IF (NVFTOT .GT. 0  .AND.  IVF .GT. 0) THEN
@@ -3149,11 +3164,11 @@ C-------------------------------------------------------------------------------
 
       IF (ISNX .NE. ISN) THEN
         ISNX = ISN
-	if(lc) then
+        if(lc) then
         WRITE (LUNIT,2)
- 2      format(' ')	
+ 2      format(' ')
         CALL LINE2 (1)
-	endif
+        endif
         NAME = NAMES(ISN)
         IF (IMODE .EQ. 3) THEN
           CALL LINE2 (1)
@@ -3247,7 +3262,7 @@ C-------------------------------------------------------------------------------
       IF (LVX) THEN
         IF (DABS(VSD3X) .GE. CRIT) THEN
 * v 4.28i
-          lc = .true.	
+          lc = .true.
           CALL LINE2 (1)
           IF (IMODE .EQ. 0) THEN
             WRITE (LUNIT,205) IOBSX, X, GMDEX, NAME
@@ -3261,8 +3276,8 @@ C-------------------------------------------------------------------------------
  215        FORMAT (' ', I6, ' DOPX', F13.3, F17.3, F21.3,
      &              F8.1, 1X, A30 )
           ENDIF
-	else
-	  lc = .false.
+        else
+          lc = .false.
         ENDIF
       ENDIF
 
@@ -3296,7 +3311,7 @@ c Mike Potterfield 3/15/07
       
       IF (LVX) THEN
         IF (DABS(VSD3Y) .GE. CRIT) THEN
-	  lc = .true.
+          lc = .true.
           CALL LINE2 (1)
           IF (IMODE .EQ. 0) THEN
             WRITE (LUNIT,225) IOBSY, Y, GMDEY
@@ -3309,8 +3324,8 @@ c Mike Potterfield 3/15/07
             WRITE (LUNIT,235) IOBSY, Y, OBSBY, VY, VSDY
  235        FORMAT (' ', I6, ' DOPY', F13.3, F17.3, F21.3, F8.1 )
           ENDIF
-	else
-	  lc = .false.
+        else
+          lc = .false.
         ENDIF
       ENDIF
 
@@ -3344,7 +3359,7 @@ c Mike Potterfield 3/15/07
       
       IF (LVX) THEN
         IF (DABS(VSD3Z) .GE. CRIT) THEN
-	  lc = .true.
+          lc = .true.
           CALL LINE2 (1)
           IF (IMODE .EQ. 0) THEN
             WRITE (LUNIT,245) IOBSZ, Z, GMDEZ, RN
@@ -3358,8 +3373,8 @@ c Mike Potterfield 3/15/07
  255        FORMAT (' ', I6, ' DOPZ', F13.3, F17.3, F21.3,
      *              F8.1 )
           ENDIF
-	else
-	  lc = .false.
+        else
+          lc = .false.
         ENDIF
       ENDIF
 
@@ -3501,9 +3516,9 @@ c Mike Potterfield 3/15/07
 **** v 4.28e
       IF(REL1.GE. 0.0) THEN        
         IX1 = 1 
-      ELSE	
+      ELSE
         IREL1 = IDNINT(REL1)
-      ENDIF	
+      ENDIF
 ********************************
 *** v 4.29c *****
 *     REL1 = DIST/SD
@@ -3525,10 +3540,10 @@ c Mike Potterfield 3/15/07
 *     IF(REL2.GE.1.D08) REL2 = 0.D0
       IF(REL2.GE.1.D08) THEN          
         IX2 = 1 
-      ELSE	
+      ELSE
         IREL2 = IDNINT(REL2)
-      ENDIF	
-************************************	
+      ENDIF
+************************************
 *** v 4.29c********
 *     REL2 = DIST/SHIFT
 *     IF(REL2.GE.1.D08) REL2 = 0.D0
@@ -3729,7 +3744,7 @@ c Increment the solution number
         NR = 3*NVEC
 *       NC = NR+3+LENG
         NC = NR+5+LENG
-	
+
 **v 4.28*********************
         CALL RGPS (IUO,IOBS,NVEC,NR,NC,LENG,G,B,IAUX,IVF,SIGUWT,A,NX,
 *    &             IGRT)
@@ -4272,7 +4287,7 @@ c Increment the solution number
           NR = 3*NVEC
 *         NC = NR + 3 + LENG
           NC = NR + 5 + LENG
-	  
+
           READ (IUO,END=666) ICM,NICM,KINDS,ISNS,JSNS,LOBS
           CALL DUMRD (IUO,NR,NC,G)
 
@@ -4454,11 +4469,11 @@ c Read the Project ID from scratch file IUO3
         IF (IMODE .EQ. 3) THEN
           VSD = G(I,N2)
           SD3 = G(I,N4)
-** v 4.29f	  
+** v 4.29f
 *         IF (SD3 .EQ. 0.D0) SD3 = 1.0D + 20
           IF (SD3 .EQ. 0.D0) SD3 = 1.D0 + 20
-******	  
-	  
+******
+
           RN = G(I,N3)
         ELSE
           VSD = G(I,N4)
@@ -4495,13 +4510,13 @@ c Read the Project ID from scratch file IUO3
           NAME1 = NAMES(ISN)
 ** v 4.29f
           if(.not.locssn(isn,isssn)) then
-	     write(lunit,966) isn
+             write(lunit,966) isn
  966         format('0SSN TABLE ERROR IN RGPS-- ',I8)
              write (lunit,*) 'subs2, 1'
              call abort2
-	  endif
-*************	     	     
-	  	  
+          endif
+*************
+
         ENDIF
         IF (JSN .NE. JSNX) THEN
           JSNX = JSN
@@ -4518,12 +4533,12 @@ c Read the Project ID from scratch file IUO3
           NAME2 = NAMES(JSN)
 ** v 4.29f
           if(.not.locssn(jsn,jsssn)) then
-	     write(lunit,966) jsn
+             write(lunit,966) jsn
              write (lunit,*) 'subs2, 2'
              call abort2
-	  endif
-*************	     	     
-	  
+          endif
+*************
+
         ENDIF
         RNSUM = RNSUM + RN
 
@@ -4566,36 +4581,36 @@ c  Mike Potterfield 3/15/07
 c New additional argument to RSTAT Mike Potterfield 3/15/07
           CALL RSTAT (VX, VSD, RN, VSD3, IOBS, KIND,1+IGPSOS)
           IF (LSS) VSD = VSD/SIGUWT
-	  
+
 *** v 4.28n
           IF (LSS) SD3 = SD3/SIGUWT
           IF (LSS) VSD3 = VSD3/SIGUWT
 **************
-	  	  
+
           IF (IMODE .EQ. 3) THEN
             VSDX = SD3
           ELSE
             VSDX = VSD
           ENDIF
 *v 4.28h
-	      if(dabs(vx) .ge. crit3) lc = .true.  
+              if(dabs(vx) .ge. crit3) lc = .true.  
               IF (IMODE .EQ. 0) THEN
-*v 4.28h	      
+*v 4.28h
                  iobsx = iobs
-		 gmdex = gmde
-		 name1x = name1
-		 name2x = name2
+                 gmdex = gmde
+                 name1x = name1
+                 name2x = name2
               ELSEIF (IMODE .EQ. 3) THEN
-	         iobsx = iobs
-		 sd3x = sd3
-		 vsd3x = vsd3
-		 gmdex = gmde
-		 name1x = name1
+                 iobsx = iobs
+                 sd3x = sd3
+                 vsd3x = vsd3
+                 gmdex = gmde
+                 name1x = name1
               ELSE
-	         iobsx = iobs
-		 vsdx = vsd
-		 name1x = name1
-		 name2x = name2 
+                 iobsx = iobs
+                 vsdx = vsd
+                 name1x = name1
+                 name2x = name2 
               ENDIF
 
 *** DEL Y GPS
@@ -4627,12 +4642,12 @@ c New additional argument to RSTAT Mike Potterfield 3/15/07
 c New additional argument to RSTAT Mike Potterfield 3/15/07
           CALL RSTAT (VY, VSD, RN, VSD3, IOBS, KIND,2+IGPSOS)
           IF (LSS) VSD = VSD/SIGUWT
-	  
+
 *** v 4.28n
           IF (LSS) SD3 = SD3/SIGUWT
           IF (LSS) VSD3 = VSD3/SIGUWT
 **************
-	  
+
           IF (IMODE .EQ. 3) THEN
             VSDY = SD3
           ELSE
@@ -4640,23 +4655,23 @@ c New additional argument to RSTAT Mike Potterfield 3/15/07
           ENDIF
             if(dabs(vy) .ge. crit3) lc = .true.
               IF (IMODE .EQ. 0) THEN
-	        iobsy = iobs
-		gmdey = gmde
+                iobsy = iobs
+                gmdey = gmde
               ELSEIF (IMODE .EQ. 3) THEN
-	        iobsy = iobs
-		sd3y = sd3
-		vsd3y = vsd3
-		gmdey = gmde
-		name2y = name2
+                iobsy = iobs
+                sd3y = sd3
+                vsd3y = vsd3
+                gmdey = gmde
+                name2y = name2
               ELSE
                 IF (LNEWX) THEN
-		  iobsy = iobs
-		  vsdy = vsd
-		  name1y = name1
-		  name2y = name2
+                  iobsy = iobs
+                  vsdy = vsd
+                  name1y = name1
+                  name2y = name2
                 ELSE
-		  iobsy = iobs
-		  vsdy = vsd
+                  iobsy = iobs
+                  vsdy = vsd
                 ENDIF
               ENDIF
 
@@ -4666,9 +4681,9 @@ c New additional argument to RSTAT Mike Potterfield 3/15/07
 
 **v 4.28*****************************
           SESSID = SESS(IVC)
-	  IVC = IVC + 1
+          IVC = IVC + 1
 ***************************************
-	  	
+
           OBS0Z = Z2 - Z1
           IF (IAUX .GT. 0) THEN
             CALL GETAUX (VAL, IAUX, B)
@@ -4700,13 +4715,12 @@ c New additional argument to RSTAT Mike Potterfield 3/15/07
             ENDIF
           ENDIF
           IF (LSS) VSD = VSD/SIGUWT
-	  
-	  
+
 *** v 4.28n
           IF (LSS) SD3 = SD3/SIGUWT
           IF (LSS) VSD3 = VSD3/SIGUWT
 **************
-	  
+
           IF (IMODE .EQ. 3) THEN
             VSDZ = SD3
           ELSE
@@ -4716,41 +4730,41 @@ c New additional argument to RSTAT Mike Potterfield 3/15/07
               IF (I .EQ. NR) THEN
                 IF (IMODE .EQ. 0) THEN
                    iobsz = iobs
-		   gmdez = gmde
+                   gmdez = gmde
                 ELSEIF (IMODE .EQ. 3) THEN
-		   iobsz = iobs
-		   sd3z = sd3
-		   vsd3z = vsd3
-		   gmdez = gmde
+                   iobsz = iobs
+                   sd3z = sd3
+                   vsd3z = vsd3
+                   gmdez = gmde
                 ELSE
                   IF (LNEWX) THEN
-		     iobsz = iobs
-		     vsdz = vsd
-		     name1z = name1
-		     name2z = name2
+                     iobsz = iobs
+                     vsdz = vsd
+                     name1z = name1
+                     name2z = name2
                   ELSE
-		     iobsz = iobs
-		     vsdz = vsd
+                     iobsz = iobs
+                     vsdz = vsd
                   ENDIF
                 ENDIF
               ELSE
                 IF (IMODE .EQ. 0) THEN
-		  iobsz = iobs
-		  gmdez = gmde
+                  iobsz = iobs
+                  gmdez = gmde
                 ELSEIF (IMODE .EQ. 3) THEN
-		  iobsz = iobs
-		  sd3z = sd3
-		  vsd3z = vsd3
-		  gmdez = gmde
+                  iobsz = iobs
+                  sd3z = sd3
+                  vsd3z = vsd3
+                  gmdez = gmde
                 ELSE
                   IF (LNEWX) THEN
-		     iobsz = iobs
-		     vsdz = vsd
-		     name1z = name1
-		     name2z = name2
+                     iobsz = iobs
+                     vsdz = vsd
+                     name1z = name1
+                     name2z = name2
                   ELSE
-		     iobsz = iobs
-		     vsdz = vsd
+                     iobsz = iobs
+                     vsdz = vsd
                   ENDIF
                 ENDIF
               ENDIF
@@ -4766,7 +4780,7 @@ c New additional argument to RSTAT Mike Potterfield 3/15/07
 c Mike Potterfield 2/2/06 add XYZCOV and RM to COVLGH parameters
                 CALL COVLGH (SN,SE,SU,ISN,JSN,B,I,G,NR,NC,LENG,
      &               XYZCOV,RM)
-****           		
+****
 
 c Mike Potterfield 2/13/06
 c Now read the reject code
@@ -4811,35 +4825,33 @@ c      WRITE(LUNIT,*)'Now the covariance matrix of NEU residuals:'
 c      WRITE(LUNIT,116) TNEUCV(1,1), TNEUCV(1,2), TNEUCV(1,3)
 c      WRITE(LUNIT,116) TNEUCV(2,1), TNEUCV(2,2), TNEUCV(2,3)
 c      WRITE(LUNIT,116) TNEUCV(3,1), TNEUCV(3,2), TNEUCV(3,3)
-		
+
                 CALL TOLGH (VSDX, VSDY, VSDZ, VSDN, VSDE, VSDU,
      &                      ISN, JSN, B)
      
 * v 4.28h
 *               OBS0H = DSQRT(OBS0N**2 + OBS0E**2)
 *               OBSBH = DSQRT(OBSBN**2 + OBSBE**2)
-***********************************		
-** v 4.29g		
+***********************************
+** v 4.29g
 **               VL = DSQRT(VN**2 + VE**2)
 **              SH = DSQRT(SN**2 + SE**2)
 *               VL = OBS0H - OBSBH       
 *               SH = DSQRT(SN**2 + SE**2)
-*************************************		
+*************************************
 
-** v 4.29k		
+** v 4.29k
                 OBS0L = DSQRT(OBS0N**2 + OBS0E**2)
                 OBSBL = DSQRT(OBSBN**2 + OBSBE**2)
                 VL = DSQRT(VN**2 + VE**2)
                 SL = DSQRT(SN**2 + SE**2)
-*************************************		
+*************************************
 
-	
-	        if(vn .ge. crit3) lc = .true.	
-	        if(ve .ge. crit3) lc = .true.	
-	        if(vu .ge. crit3) lc = .true.	
-	        if(vl .ge. crit3) lc = .true.	
-		
-		   	
+                if(vn .ge. crit3) lc = .true.
+                if(ve .ge. crit3) lc = .true.
+                if(vu .ge. crit3) lc = .true.
+                if(vl .ge. crit3) lc = .true.
+
 *** ACCULULATE N,E,U STATS, BYPASS DOWNWEIGHTED OUTLIERS AND NO CHECK
 
               IF ( DABS(VX+VY+VZ) .LE. 1.D-6 ) THEN
@@ -4861,32 +4873,32 @@ c but this has been modified so that rejected observation
 c components are numbered sequentially.  The variable IGPSOS
 c corrects the observation component number to match the rest
 c of the Adjustment output.
-c	           CALL RSTAT5(90,VN,IOBS)
-	           CALL RSTAT5(90,VN,1+IGPSOS)
-c	           CALL RSTAT5(91,VE,IOBS)
-	           CALL RSTAT5(91,VE,2+IGPSOS)
-c	           CALL RSTAT5(92,VU,IOBS)
-	           CALL RSTAT5(92,VU,3+IGPSOS)
-************		   
+c                  CALL RSTAT5(90,VN,IOBS)
+                   CALL RSTAT5(90,VN,1+IGPSOS)
+c                  CALL RSTAT5(91,VE,IOBS)
+                   CALL RSTAT5(91,VE,2+IGPSOS)
+c                  CALL RSTAT5(92,VU,IOBS)
+                   CALL RSTAT5(92,VU,3+IGPSOS)
+************
 **v 4.29f  
 c                   CALL RSTAT5(93,VL,IOBS)
                    CALL RSTAT5(93,VL,3+IGPSOS)
 c End of changes by Mike Potterfield 10/26/08
-*******************		   
+*******************
 
 ** v 4.29f
 c New additional argument to acumdu Mike Potterfield 1/15/07
                 if(iobs.ne.iobsl) then
                 call acum2du(iobs,vu,3+IGPSOS)
-		endif
-		
+                endif
+
 c New additional argument to acumdl Mike Potterfield 1/15/07
 ** v 4.29i
                 if(iobs.ne.iobsl) then
                 call acum2dl(iobs,vl,3+IGPSOS)
-		endif
-*********		
-		
+                endif
+*********
+
               ENDIF
 
 * v 4.28h print all components of a vector if one exceeds tolerance
@@ -4899,26 +4911,25 @@ c New additional argument to acumdl Mike Potterfield 1/15/07
     2   FORMAT (' ')
         lp = .true.
         endif
-	
 
       if(lc) then
       
         if(lvg) then
-	  if(lgv) then
+          if(lgv) then
              call line2 (8)
           else  
              call line2 (4)         
           endif
-         endif	  
+         endif
 
-	 if(lvg) then
+         if(lvg) then
               IF (IMODE .EQ. 0) THEN
-** v 4.29f	      
+** v 4.29f
 *               WRITE (LUNIT,161) IOBSX, OBS0X, GMDEX,NAME1X,NAME2X
 * 161         FORMAT (' ',I6,' DX',F15.4,F12.4,18X,
 *    &                  2(1X,A30) )
                 WRITE (LUNIT,161) IOBSX, OBS0X, GMDEX,isssn,NAME1X,
-     &                jsssn,name2x		
+     &                jsssn,name2x
   161         FORMAT (' ',I6,' DX',F15.4,F12.4,17X,
 ** v 4.29i
 *    &                  2(2x,i5,2x,A30) )
@@ -4926,7 +4937,7 @@ c New additional argument to acumdl Mike Potterfield 1/15/07
 **************
      
               ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	      
+** v 4.29f
 *               WRITE (LUNIT,162) IOBSX,OBS0X,OBSBX,VX,SD3X,VSD3X,
 *    &                       GMDEX,NAME1
 *  162           FORMAT (' ',I6,' DX',F15.4,F17.4,F20.4,F9.4,F10.4,
@@ -4946,13 +4957,13 @@ c It is now being computed above 3/15/07
      &                  F10.4,t99,'(',i5,')',1x,A30)
 ******************      
               ELSE
-** v 4.29f	      
+** v 4.29f
 *                WRITE (LUNIT,16) IOBSX,OBS0X,OBSBX,VX,VSDX,NAME1X,
-*    &                  NAME2X	      
+*    &                  NAME2X
 *  16           FORMAT (' ',I6,' DX',F15.4,F18.4,F21.4,F8.1,2(1X,A30) )
    
                  WRITE (LUNIT,16) IOBSX,OBS0X,OBSBX,VX,VSDX,isssn,
-     &                  name1x,jsssn,NAME2X	      
+     &                  name1x,jsssn,NAME2X
    16           FORMAT (' ',I6,' DX',F15.4,F18.4,F21.4,F7.1,1x,
 ** v 4.29i
 *    &                 2(i5,2x,a30))
@@ -4967,8 +4978,8 @@ c It is now being computed above 3/15/07
                 WRITE (LUNIT,171) IOBSY, OBS0Y, GMDEY
   171           FORMAT (' ',I6,' DY',F15.4,F12.4)
               ELSEIF (IMODE .EQ. 3) THEN
-	      
-** v 4.29f	      
+
+** v 4.29f
 *               WRITE (LUNIT,172) IOBSY,OBS0Y,OBSBY,VY,SD3Y,VSD3Y,
 *    &                        GMDEY,NAME2Y
 * 172           FORMAT (' ',I6,' DY',F15.4,F17.4,F20.4,F9.4,F10.4,
@@ -4987,7 +4998,7 @@ c Mike Potterfield component number updated by IGPSOS
 ************     
               ELSE
                 IF (LNEWX) THEN
-** v 4.29f		
+** v 4.29f
 *                 WRITE (LUNIT,173) IOBSY,OBS0Y,OBSBY,VY,VSDY,
 *    &                          NAME1Y,NAME2Y
 * 173             FORMAT (' ',I6,' DY',F15.4,F18.4,F21.4,F7.1,2(1X,A30))
@@ -5010,7 +5021,7 @@ c Mike Potterfield component number updated by IGPSOS
               IF (I .EQ. NR) THEN
                 IF (IMODE .EQ. 0) THEN
                    WRITE (LUNIT,181) IOBSZ, OBS0Z, GMDEZ, RNSUM,
-     &             SESSID		  
+     &             SESSID
   181             FORMAT (' ',I6,' DZ',F15.4,F12.4,F18.2,T58,A5)
                 ELSEIF (IMODE .EQ. 3) THEN
 c Mike Potterfield 2/14/06
@@ -5028,21 +5039,21 @@ c                   WRITE (LUNIT,182) IOBSZ,OBS0Z,OBSBZ,VZ,SD3Z,
      
                 ELSE
                   IF (LNEWX) THEN
-** v 4.29f		  
+** v 4.29f
 *                    WRITE (LUNIT,186) IOBSZ,OBS0Z,OBSBZ,VZ,
 *    &                       VSDZ,NAME1Z, NAME2Z,SESSID
 * 186               FORMAT (' ',I6,' DZ',F15.4,F18.4,F21.4,F7.1,
-*    &                     2(1X,A30), 2X, A5)		  
+*    &                     2(1X,A30), 2X, A5)
                      WRITE (LUNIT,186) IOBSZ,OBS0Z,OBSBZ,VZ,
      &                       VSDZ,isssn,NAME1Z,jsssn, NAME2Z,SESSID
   186               FORMAT (' ',I6,' DZ',F15.4,F18.4,F21.4,F7.1,
 ** v 4.29i
-*    &                     2(1X,i5,2x,A30), 2X, A5)		  
-     &                     2(1X,'(',i5,')',1x,A30), 2X, A5)		  
+*    &                     2(1X,i5,2x,A30), 2X, A5)
+     &                     2(1X,'(',i5,')',1x,A30), 2X, A5)
 ********************     
                   ELSE
                      WRITE (LUNIT,18) IOBSZ,OBS0Z,OBSBZ,VZ,VSDZ,
-     &                       SESSID		    
+     &                       SESSID
    18               FORMAT (' ',I6,' DZ',F15.4,F18.4,F21.4,F7.1,2X,A5)
                   ENDIF
                 ENDIF
@@ -5057,12 +5068,12 @@ c components, including rejected vectors
 c                  WRITE (LUNIT,184) IOBSZ,OBS0Z,OBSBZ,VZ,SD3Z,
 c Mike Potterfield 3/22/06 component number updated by offset
       WRITE (LUNIT,184)3+IGPSOS,OBS0Z,OBSBZ,VZ,SD3Z,
-     &                             VSD3Z,GMDEZ, SESSID		  
+     &                             VSD3Z,GMDEZ, SESSID
   184           FORMAT(' ',I6,' DZ',F15.4,F17.4,F20.4,F9.4,F10.4,F10.4,
      &                 8X,A5)
                 ELSE
                   IF (LNEWX) THEN
-** v 4.29f		  
+** v 4.29f
 *                    WRITE (LUNIT,187) IOBSZ,OBS0Z,OBSBZ,VZ,VSDZ,
 *    &                           NAME1Z,NAME2Z,SESSID
 * 187               FORMAT (' ',I6,' DZ',F15.4,F18.4,F21.4,F7.1,
@@ -5076,7 +5087,7 @@ c Mike Potterfield 3/22/06 component number updated by offset
 *****************************     
                   ELSE
                      WRITE (LUNIT,185) IOBSZ, OBS0Z, OBSBZ, VZ,
-     &                     VSDZ, SESSID		    
+     &                     VSDZ, SESSID
 ** v 4.29f
 * 185               FORMAT (' ',I6,' DZ',F15.4,F18.4,F21.4,F7.1,
 *    &                     4X,A5)
@@ -5087,11 +5098,11 @@ c Mike Potterfield 3/22/06 component number updated by offset
                   ENDIF
                 ENDIF
           endif
-	   
-	  if(.not.lgv) then 
-	    write(lunit,3)
-    3       format(' ')	    
-	  else  
+           
+          if(.not.lgv) then 
+            write(lunit,3)
+    3       format(' ')
+          else  
 
 *** PRINT N,E,U RESIDUALS AFTER Z COMPONENT
 
@@ -5104,40 +5115,40 @@ c Mike Potterfield 3/22/06 component number updated by offset
 c Mike Potterfield 2/2/06 XYZCOV and RM are added to the parameters
                 CALL COVLGH (SN,SE,SU,ISN,JSN,B,I,G,NR,NC,LENG,
      &                   XYZCOV,RM)
-****           		
-		
+****
+
                 CALL TOLGH (VSDX, VSDY, VSDZ, VSDN, VSDE, VSDU,
      &                      ISN, JSN, B)
      
 * v 4.28h
 *               OBS0H = DSQRT(OBS0N**2 + OBS0E**2)
 *               OBSBH = DSQRT(OBSBN**2 + OBSBE**2)
-** v 4.29g		
+** v 4.29g
 **               VL = DSQRT(VN**2 + VE**2)
 **              SH = DSQRT(SN**2 + SE**2)
 *               VL = OBS0H - OBSBH 
 *               SH = DSQRT(SN**2 + SE**2)
-**********************		
-** v 4.29k		
+**********************
+** v 4.29k
 
                 OBS0L = DSQRT(OBS0N**2 + OBS0E**2)
                 OBSBL = DSQRT(OBSBN**2 + OBSBE**2)
                 VL = DSQRT(VN**2 + VE**2)
                 SL = DSQRT(SN**2 + SE**2)
 **************************
-		   	
+
                 IF (IMODE .EQ. 0) THEN
                   WRITE (LUNIT,191) ' DN', OBS0N
                   WRITE (LUNIT,191) ' DE', OBS0E
 * v 4.28h
-		  
-*                  write( lunit,191) ' DL', OBS0H	  
+
+*                  write( lunit,191) ' DL', OBS0H
 **********
 * v 4.28k
-                  write( lunit,191) ' DL', OBS0L	  
-*****************		  
-		  
-		  
+                  write( lunit,191) ' DL', OBS0L
+*****************
+
+
                   WRITE (LUNIT,191) ' DU', OBS0U
   191             FORMAT (' ', 6X, A3, F15.4)
                   write(lunit,3)
@@ -5170,16 +5181,16 @@ c in delta North, East, Length and Up.
                        ELSE 
                              VSDL = 0.
                        ENDIF
-		
+
                  WRITE (LUNIT,192) ' DN', OBS0N, OBSBN, VN, VSDN
 c                  WRITE (LUNIT,192) ' DN', OBS0N, OBSBN, VN, SN   
-**v4.27		  
+**v4.27
 c                 WRITE (LUNIT,192) ' DE', OBS0E, OBSBE, VE, VSDE
 c Output the vector and solution numbers on the DE line
       WRITE(LUNIT,392)' DE', OBS0E, OBSBE, VE, VSDE,IVCNUM,IGPSSL
 c                 WRITE (LUNIT,192) ' DE', OBS0E, OBSBE, VE, SE  
-** v 4.29k		  
-		  
+** v 4.29k
+
 *                 WRITE (LUNIT,192) ' DL', OBS0H, OBSBH, VL, SH  
 c                  WRITE (LUNIT,292) ' DL',  VL, VSDL
 c Output the Project ID on the DL line  
@@ -5194,7 +5205,7 @@ c no output
         WRITE (LUNIT, 394) ' DU', OBS0U, OBSBU, VU, VSDU,CREJCT
       ENDIF
 c                 WRITE (LUNIT,192) ' DU', OBS0U, OBSBU, VU, SU  
-		  
+
 c Mike Potterfield 2/2/06 
 c This concludes the revisions required to output correct values
 c for standard deviations in residuals for dNELU
@@ -5215,7 +5226,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 
                   write(lunit,3)
                 ELSE
-**v 4.27		
+**v 4.27
 *                 WRITE (LUNIT,193) ' DN', OBS0N, OBSBN, VN, VSDN
                   WRITE (LUNIT,193) ' DN', OBS0N, OBSBN, VN, SN  
 
@@ -5226,8 +5237,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ** v 4.29k
 *                 WRITE (LUNIT,193) ' DL', OBS0H, OBSBH, VL, SH  
                   WRITE (LUNIT,293) ' DL',  VL, SL  
-*******		  
-		  
+*******
+
 **v4.27
 *                 WRITE (LUNIT,193) ' DU', OBS0U, OBSBU, VU, VSDU
                   WRITE (LUNIT,193) ' DU', OBS0U, OBSBU, VU, SU  
@@ -5241,13 +5252,13 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
                 ENDIF
              endif     
            endif 
-	   lc = .false.
-	   
+           lc = .false.
+           
 ** v 4.29f
             iobsl = iobs
-**************	    	   
+**************
 
-         endif	      
+         endif
         endif
   500 CONTINUE
 
@@ -5308,7 +5319,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 
       IF ( ISNX .NE. ISN  .AND.  KIND .GT. 0  .AND.  KIND .LT. 7 ) THEN
         ISNX = ISN
-	if(lc) then
+        if(lc) then
         CALL LINE2 (1)
         WRITE (LUNIT,1)
     1   FORMAT (' ')
@@ -5328,20 +5339,20 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         NAME1 = NAMES(ISN)
 ** v 4.29f
         if(.not.locssn(isn,isssn)) then
-	  write(lunit,966) isn
+          write(lunit,966) isn
  966      format('0SSN TABLE ERROR IN ROBS-- ',i8)
              write (lunit,*) 'subs2, 3'
           call abort2
-	endif
-********************	  	  	
+        endif
+********************
 
         IF ( KIND .GT. 3  .AND.  IMODE .EQ. 3 ) THEN
           CALL LINE2 (1)
-** v 4.29f	  
+** v 4.29f
 *         WRITE (LUNIT,510) NAME1
 *510      FORMAT (93X,A30)
           WRITE (LUNIT,510) isssn,NAME1
-** v 4.29i	  
+** v 4.29i
 *510      FORMAT (t99,i5,2x,A30)
  510      FORMAT (t99,'(',i5,')',1x,A30)
 ************************** 
@@ -5350,55 +5361,55 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
       ENDIF
       IF ( ISNX .NE. ISN  .AND.  KIND .GE. 7  ) THEN
         ISNX = ISN
-	if(lc) then
+        if(lc) then
         WRITE (LUNIT,2)
  2      format(' ')
         CALL LINE2 (1)
-	endif
+        endif
         NAME1 = NAMES(ISN)
-	
+
 ** v 4.29f
         if(.not.locssn(isn,isssn)) then
-	  write(lunit,966) isn
+          write(lunit,966) isn
              write (lunit,*) 'subs2, 4'
           call abort2
-	endif
-********************	  	  	
-	
+        endif
+********************
+
         IF ( IMODE .EQ. 3 ) THEN
           CALL LINE2 (1)
-** v 4.29f	  
+** v 4.29f
 *         WRITE (LUNIT,510) NAME1
           WRITE (LUNIT,510) isssn,NAME1
-*****************	  
-	  
+*****************
+
         ENDIF
       ENDIF
       IF ( JSNX .NE. JSN  .AND.  KIND .GE. 7 ) THEN
         JSNX = JSN
         NAME2 = NAMES(JSN)
-	
+
 ** v 4.29f
         if(.not.locssn(jsn,jsssn)) then
-	  write(lunit,966) isn
+          write(lunit,966) isn
              write (lunit,*) 'subs2, 5'
           call abort2
-	endif
-********************	  	  	
-	
+        endif
+********************
+
       ENDIF
       IF ( KIND .EQ. 10  .AND.  KSNX .NE. IAUX ) THEN
         KSNX = IAUX
         NAME3 = NAMES(IAUX)
-	
+
 ** v 4.29f
         if(.not.locssn(iaux,ksssn)) then
-	  write(lunit,966)iaux 
+          write(lunit,966)iaux 
              write (lunit,*) 'subs2, 6'
           call abort2
-	endif
-********************	  	  	
-	
+        endif
+********************
+
       ENDIF
 
 *** SCALE BY THE VARIANCE FACTOR
@@ -5462,7 +5473,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
@@ -5471,7 +5482,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
 * v 4.28i
-            lc = .true.	  
+            lc = .true.
             CALL LINE2 (2)
             IF (IMODE .EQ. 0) THEN
               WRITE (LUNIT,11) IOBS,AUX,GMDE,RN,IAUX
@@ -5486,11 +5497,11 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
    10         FORMAT ('0',I6,' AP',1PD17.2,1PD18.2,1PD18.2,0PF8.1,
      *                ' AUX PARM #',I4)
             ENDIF
-	    
+
 * v 4.28i
           else
-	    lc = .false.	    
-	    
+            lc = .false.
+            
           ENDIF
         ENDIF
 
@@ -5515,22 +5526,22 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = VMET/SD
         VSD3 = DIVID(VMET,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,131) IOBS,ID1,IM1,S1,ADIR1,GMDE,RN,NAME1
 *131          FORMAT (' ',I6,' LA',I4,I3,F9.5,A1,F9.3,F19.2,1X,A30)
               WRITE (LUNIT,131) IOBS,ID1,IM1,S1,ADIR1,GMDE,RN,
-     &	            isssn,name1 
+     &              isssn,name1 
 ** v 4.29i
 *131          FORMAT (' ',I6,' LA',I4,I3,F9.5,A1,F9.3,F19.2,1x,i5,
 *    &               2x,a30)
@@ -5539,7 +5550,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *************** 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,132) IOBS,ID1,IM1,S1,ADIR1,ID3,IM3,S3,ADIR3,
 *    &                      VSEC,VMET,SD3,VSD3,GMDE,RN,NAME1
 *132          FORMAT (' ',I6,' LA',I4,I3,F9.5,A1,I4,I3,F9.5,A1,F9.5,
@@ -5554,7 +5565,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 **********************************    
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,13) IOBS,ID1,IM1,S1,ADIR1,ID3,IM3,S3,ADIR3,
 *    *                     VSEC,VMET,VSD,NAME1
 *  13         FORMAT (' ',I6,' LA',I4,I3,F9.5,A1,I5,I3,F9.5,A1,
@@ -5568,8 +5579,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ******************
      
             ENDIF
-	  else
-	    lc = .false.  
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -5611,17 +5622,17 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,141) IOBS,ID2,IM2,S2,ADIR2,GMDE,RN,NAME1
 *141          FORMAT (' ',I6,' LO',I4,I3,F9.5,A1,F9.3,F19.2,1X,A30)
               WRITE (LUNIT,141) IOBS,ID2,IM2,S2,ADIR2,GMDE,RN,
-     &                          isssn,name1	      
+     &                          isssn,name1
  141          FORMAT (' ',I6,' LO',I4,I3,F9.5,A1,F9.3,F19.2,1x,
 ** v 4.29i
 *    &                i5,2x,a30)
@@ -5629,7 +5640,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 **************************** 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,142) IOBS,ID2,IM2,S2,ADIR2,ID3,IM3,S3,ADIR3,
 *    &                      VSEC,VMET,SD3,VSD3,GMDE,RN,NAME1
 *142          FORMAT (' ',I6,' LO',I4,I3,F9.5,A1,I4,I3,F9.5,A1,F9.5,
@@ -5643,7 +5654,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ***********************************     
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,14) IOBS,ID2,IM2,S2,ADIR2,ID3,IM3,S3,ADIR3,
 *    *                     VSEC,VMET,VSD,NAME1
 *  14         FORMAT (' ',I6,' LO',I4,I3,F9.5,A1,I5,I3,F9.5,A1,
@@ -5657,8 +5668,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ***************************
      
             ENDIF
-	  else
-	    lc = .false.  
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -5669,41 +5680,41 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,151) IOBS,EHT,GMDE,RN,NAME1
 *151          FORMAT (' ',I6,' EH',F14.3,F12.3,F19.2,1X,A30)
               WRITE (LUNIT,151) IOBS,EHT,GMDE,RN,isssn,NAME1
-** v 4.29i	      
+** v 4.29i
 *151          FORMAT (' ',I6,' EH',F14.3,F12.3,F19.2,1x,i5,2x,A30)
  151          FORMAT (' ',I6,' EH',F14.3,F12.3,F19.2,1x,'(',i5,')',1x,
      *                A30)
 *************************
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,152) IOBS,EHT,OBSB,V,SD3,VSD3,GMDE,RN,NAME1          
 *152          FORMAT (' ',I6,' EH',F14.3,F17.3,F20.3,F8.2,F8.2,F10.4,
 *    &                F6.2,2X,A30)
               WRITE (LUNIT,152) IOBS,EHT,OBSB,V,SD3,VSD3,GMDE,RN,         
-     &                          isssn,name1	      
+     &                          isssn,name1
  152          FORMAT (' ',I6,' EH',F14.3,F17.3,F20.3,F8.2,F8.2,F10.4,
 ** v 4.29i
 *    &                F6.2,t99,i5,2x,A30)
      &                F6.2,t99,'(',i5,')',1x,A30)
 ****************
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,15) IOBS,EHT,OBSB,V,VSD,NAME1
 *  15         FORMAT (' ',I6,' EH',F14.3,F18.3,F21.3,F8.1,1X,A30)
               WRITE (LUNIT,15) IOBS,EHT,OBSB,V,VSD,isssn,NAME1
@@ -5714,8 +5725,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *************************************
    
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -5727,34 +5738,34 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVS) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,171) IOBS,S,GMDE,RN,NAME1,NAME2
 *171          FORMAT (' ',I6,' DIST',F13.4,F11.3,F19.2,2(1X,A30))
               WRITE (LUNIT,171) IOBS,S,GMDE,RN,isssn,NAME1,jsssn,NAME2
-** v 4.29i	      
+** v 4.29i
 *171          FORMAT (' ',I6,' DIST',F13.4,F11.3,F19.2,2(1X,i5,2x,A30))
  171          FORMAT (' ',I6,' DIST',F13.4,F11.3,F19.2,2(1X,'(',i5,')',
      *                1x,A30))
 ****************************
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,172) IOBS,S,OBSB,V,SD3,VSD3,GMDE,RN,NAME2
 *172          FORMAT (' ',I6,' DIST',F13.4,F17.4,F19.3,F8.2,F8.2,F10.4,
 *    &                F6.2,4X,A30)
               WRITE (LUNIT,172) IOBS,S,OBSB,V,SD3,VSD3,GMDE,RN,
-     &	                        jsssn,name2
+     &                          jsssn,name2
  172          FORMAT (' ',I6,' DIST',F13.4,F17.4,F19.3,F8.2,F8.2,F10.4,
 ** v 4.20i
 *    &                F6.2,t99,i5,2x,A30)
@@ -5762,12 +5773,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,17) IOBS,S,OBSB,V,VSD,NAME1,NAME2
 * 17          FORMAT (' ',I6,' DIST',F12.3,F18.3,F21.3,
 *    *                F8.1,2(1X,A30))
               WRITE (LUNIT,17) IOBS,S,OBSB,V,VSD,
-     &                         isssn,name1,jsssn,name2	      
+     &                         isssn,name1,jsssn,name2
   17          FORMAT (' ',I6,' DIST',F12.3,F18.3,F21.3,
 ** v 4.29i
 *    *                F8.1,2(1X,i5,2x,A30))
@@ -5775,8 +5786,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *****************************     
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -5797,23 +5808,23 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (IMODE .EQ. 0  .OR.  IMODE .EQ. 3) GMDE = GMDE*RAD*3600.D0
         IF (IMODE .EQ. 3) SD3 = SD3*RAD*3600.D0
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         CALL DIRDMS (OBSB,IDB,IMB,SB)
         IF (LVR) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,191) IOBS,ID0,IM0,S0,GMDE,RN,NAME1,NAME2
 *191          FORMAT (' ',I6,' AZ',I4,I3,F6.2,'N',F11.2,F20.2,2(1X,A30))
               WRITE (LUNIT,191) IOBS,ID0,IM0,S0,GMDE,RN,
-     &                           isssn,name1,jsssn,name2	      
+     &                           isssn,name1,jsssn,name2
  191          FORMAT (' ',I6,' AZ',I4,I3,F6.2,'N',F11.2,F20.2,
 ** v 4.29i
 *    &                2(1x,i5,2x,a30))
@@ -5821,7 +5832,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ****************************
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,192)IOBS,ID0,IM0,S0,IDB,IMB,SB,VSEC,SD3,VSD3,
 *    &                      GMDE,RN,NAME2
 *192          FORMAT (' ',I6,' AZ',I4,I3,F6.2,'N',I7,I3,F6.2,'N',
@@ -5835,7 +5846,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 **************************     
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,19) IOBS,ID0,IM0,S0,IDB,IMB,SB,
 *    &                     VSEC,VSD,NAME1,NAME2
 *19           FORMAT (' ',I6,' AZ',I4,I3,F6.2,'N',I8,I3,F5.1,
@@ -5849,8 +5860,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *****************************
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -5866,23 +5877,23 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (IMODE .EQ. 0  .OR.  IMODE .EQ. 3) GMDE = GMDE*RAD*3600.D0
         IF (IMODE .EQ. 3) SD3 = SD3*RAD*3600.D0
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         CALL VERDMS (OBSB,IDB,IMB,SB,ISIGN)
         IF (LVZ) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,211) IOBS,ID0,IM0,S0,GMDE,RN,NAME1,NAME2
 *211          FORMAT (' ',I6,' ZD',I4,I3,F6.2,' ',F11.2,F20.2,2(1X,A30))
               WRITE (LUNIT,211) IOBS,ID0,IM0,S0,GMDE,RN,
-     &                           isssn,name1,jsssn,name2	      
+     &                           isssn,name1,jsssn,name2
  211          FORMAT (' ',I6,' ZD',I4,I3,F6.2,' ',F11.2,F20.2,
 ** v 4.29i
 *    &                  2(1x,i5,2x,a30))
@@ -5890,7 +5901,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *************************
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,212)IOBS,ID0,IM0,S0,IDB,IMB,SB,VSEC,SD3,VSD3,
 *    &                      GMDE,RN,NAME2
 *212          FORMAT (' ',I6,' ZD',I4,I3,F6.2,' ',I7,I3,F6.2,
@@ -5904,7 +5915,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *******************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,21) IOBS,ID0,IM0,S0,IDB,IMB,SB,
 *    &                     VSEC,VSD,NAME1,NAME2
 * 21          FORMAT (' ',I6,' ZD',I4,I3,F6.2,I9,I3,F6.2,
@@ -5917,8 +5928,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
      &                4X,F10.5,8X,F8.1,2(1X,'(',i5,')',1x,A30))
 ******************************
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -5939,24 +5950,24 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (IMODE .EQ. 0  .OR.  IMODE .EQ. 3) GMDE = GMDE*RAD*3600.D0
         IF (IMODE .EQ. 3) SD3 = SD3*RAD*3600.D0
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         CALL DIRDMS (OBSB,IDB,IMB,SB)
         IF (LVA) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (2)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,231)IOBS,ID0,IM0,S0,GMDE,RN,NAME1,NAME2,NAME3 
 *231          FORMAT (' ',I6,' HA',I4,I3,F6.2,' ',F11.2,F20.2,2(1X,A30)/
 *    &                T86,A30)
               WRITE (LUNIT,231)IOBS,ID0,IM0,S0,GMDE,RN, 
-     &                         isssn,name1,jsssn,name2,ksssn,name3	      
+     &                         isssn,name1,jsssn,name2,ksssn,name3
  231          FORMAT (' ',I6,' HA',I4,I3,F6.2,' ',F11.2,F20.2,2(1X,A30)/
 ** v 4.29i
 *    &                2(1x,i5,2x,a30)/ T86,i5,2x,A30)
@@ -5964,7 +5975,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *****************************************
      
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,232)IOBS,ID0,IM0,S0,IDB,IMB,SB,VSEC,SD3,VSD3,
 *    &                      GMDE,RN,NAME2,NAME3
 *232          FORMAT (' ',I6,' HA',I4,I3,F6.2,' ',I7,I3,F6.2,
@@ -5979,7 +5990,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *******************************     
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,23) IOBS,ID0,IM0,S0,IDB,IMB,SB,
 *    &                     VSEC,VSD,NAME1,NAME2,NAME3
 *23           FORMAT (' ',I6,' HA',I4,I3,F6.2,' ',I8,I3,F6.2,
@@ -5993,8 +6004,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
      *            '(',i5,')',1x,A30)
 ****************
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6015,30 +6026,30 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (IMODE .EQ. 0  .OR.  IMODE .EQ. 3) GMDE = GMDE*RAD*3600.D0
         IF (IMODE .EQ. 3) SD3 = SD3*RAD*3600.D0
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         CALL DIRDMS (OBSB,IDB,IMB,SB)
         IF (LVD) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,251) IOBS,ID0,IM0,S0,GMDE,RN,NAME1,NAME2
 *251          FORMAT (' ',I6,' HD',I4,I3,F6.2,F12.2,F20.2,2(1X,A30))
               WRITE (LUNIT,251) IOBS,ID0,IM0,S0,GMDE,RN,
-     &                         isssn,name1,jsssn,name2	      
+     &                         isssn,name1,jsssn,name2
  251          FORMAT (' ',I6,' HD',I4,I3,F6.2,F12.2,F20.2,
 ** v 4.29i
 *    &               2(1x,i5,2x,a30)) 
      &               2(1x,'(',i5,')',1x,a30)) 
 ********************* 
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,252)IOBS,ID0,IM0,S0,IDB,IMB,SB,VSEC,SD3,VSD3,
 *    &                      GMDE,RN,NAME2
 *252          FORMAT (' ',I6,' HD',I4,I3,F6.2,I8,I3,F6.2,
@@ -6052,7 +6063,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *******************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,25) IOBS,ID0,IM0,S0,IDB,IMB,SB,
 *    &                     VSEC,VSD,NAME1,NAME2
 *25           FORMAT (' ',I6,' HD',I4,I3,F6.2,' ',I8,I3,F6.2,
@@ -6065,8 +6076,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
      &                4X,F10.5,8X,F8.1,2(1X,'(',i5,')',1x,A30))
 *********************
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6088,30 +6099,30 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (IMODE .EQ. 0  .OR.  IMODE .EQ. 3) GMDE = GMDE*RAD*3600.D0
         IF (IMODE .EQ. 3) SD3 = SD3*RAD*3600.D0
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         CALL DIRDMS (OBSB,IDB,IMB,SB)
         IF (LVR) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,271) IOBS,ID0,IM0,S0,GMDE,RN,NAME1,NAME2
 *271          FORMAT (' ',I6,' CA',I4,I3,F6.2,'N',F11.2,F20.2,2(1X,A30))
               WRITE (LUNIT,271) IOBS,ID0,IM0,S0,GMDE,RN,
-     &                         isssn,name1,jsssn,name2	      
+     &                         isssn,name1,jsssn,name2
  271          FORMAT (' ',I6,' CA',I4,I3,F6.2,'N',F11.2,F20.2,
 ** v 4.29i
 *    &                2(1x,i5,2x,a30))
      &                2(1x,'(',i5,')',1x,a30))
 ***************
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE(LUNIT,272)IOBS,ID0,IM0,S0,IDB,IMB,SB,VSEC,SD3,VSD3,
 *    &                      GMDE,RN,NAME2
 *272          FORMAT (' ',I6,' CA',I4,I3,F6.2,'N',I7,I3,F6.2,
@@ -6125,7 +6136,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
      *             1x,A30)
 *****************************
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,27) IOBS,ID0,IM0,S0,IDB,IMB,SB,
 *    &                     VSEC,VSD,NAME1,NAME2
 *27           FORMAT (' ',I6,' CA',I4,I3,F6.2,'N',I8,I3,F6.2,
@@ -6138,8 +6149,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
      &                'N',3X,F7.2,11X,F8.1,2(1X,'(',i5,')',1x,A30))
 *******************
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6152,22 +6163,22 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVS) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,291) IOBS,S,GMDE,RN,NAME1,NAME2
 *291          FORMAT (' ',I6,' CD',F15.4,F11.3,F19.2,2(1X,A30))
               WRITE (LUNIT,291) IOBS,S,GMDE,RN,
-     &                          isssn,name1,jsssn,name2	      
+     &                          isssn,name1,jsssn,name2
  291          FORMAT (' ',I6,' CD',F15.4,F11.3,F19.2,
 ** v 4.29i
 *    &               2(1x,i5,2x,a30))
@@ -6175,12 +6186,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ********************************* 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,292) IOBS,S,OBSB,V,SD3,VSD3,GMDE,RN,NAME2
 *292          FORMAT (' ',I6,' CD',F15.4,F17.4,F19.3,F8.2,F8.2,
 *    &                F10.4,F6.2,4X,A30)
               WRITE (LUNIT,292) IOBS,S,OBSB,V,SD3,VSD3,GMDE,RN,
-     &                           jsssn,name2	      
+     &                           jsssn,name2
  292          FORMAT (' ',I6,' CD',F15.4,F17.4,F19.3,F8.2,F8.2,
 ** v 4.29i
 *    &                F10.4,F6.2,t99,i5,2x,A30)
@@ -6188,20 +6199,20 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ******************************   
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,29) IOBS,S,OBSB,V,VSD,NAME1,NAME2
 * 29          FORMAT (' ',I6,' CD ',F14.4,F18.4,F20.3,
 *    *                F8.1,2(1X,A30))
               WRITE (LUNIT,29) IOBS,S,OBSB,V,VSD,
-     &	                      isssn,name1,jsssn,name2   
+     &                        isssn,name1,jsssn,name2   
   29          FORMAT (' ',I6,' CD ',F14.4,F18.4,F20.3,
 ** v 4.29i
 *    *                F8.1,2(1X,i5,2x,A30))
      *                F8.1,2(1X,'(',i5,')',1x,A30))
 *****************
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6218,19 +6229,19 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         IF (IMODE .EQ. 0  .OR.  IMODE .EQ. 3) GMDE = GMDE*RAD*3600.D0
         IF (IMODE .EQ. 3) SD3 = SD3*RAD*3600.D0
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         CALL VERDMS (OBSB,IDB,IMB,SB,ISIGN)
         IF (LVZ) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,311) IOBS,ID0,IM0,S0,GMDE,RN,NAME1,NAME2
 *311          FORMAT (' ',I6,' CZ',I4,I3,F6.2,' ',F11.2,F20.2,2(1X,A30))
               WRITE (LUNIT,311) IOBS,ID0,IM0,S0,GMDE,RN,
@@ -6242,7 +6253,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ******************************** 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE(LUNIT,312)IOBS,ID0,IM0,S0,IDB,IMB,SB,VSEC,SD3,VSD3,
 *    &                      GMDE,RN,NAME2
 *312          FORMAT (' ',I6,' CZ',I4,I3,F6.2,' ',I7,I3,F6.2,
@@ -6257,7 +6268,7 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *****************************************     
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,31) IOBS,ID0,IM0,S0,IDB,IMB,SB,
 *    &                     VSEC,VSD,NAME1,NAME2
 * 31          FORMAT (' ',I6,' CZ',I4,I3,F6.2,I9,I3,F6.2,
@@ -6271,8 +6282,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 **********************************     
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6284,22 +6295,22 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,411) IOBS,OBS0,GMDE,RN,NAME1,NAME2
 *411          FORMAT (' ',I6,' DN',F15.4,F12.4,F18.2,2(1X,A30))
               WRITE (LUNIT,411) IOBS,OBS0,GMDE,RN,
-     &                          isssn,name1,jsssn,name2	      
+     &                          isssn,name1,jsssn,name2
  411          FORMAT (' ',I6,' DN',F15.4,F12.4,F18.2,
 ** v 4.29i
 *    &                2(1x,i5,2x,a30))
@@ -6307,12 +6318,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *************************************** 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,412) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,NAME2
 *412          FORMAT (' ',I6,' DN',F15.4,F17.4,F19.3,F8.2,F8.2,
 *    &                 F10.4,F6.2,4X,A30)
               WRITE (LUNIT,412) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,
-     &                          jsssn,name2	      
+     &                          jsssn,name2
  412          FORMAT (' ',I6,' DN',F15.4,F17.4,F19.3,F8.2,F8.2,
 ** v 4.29i
 *    &                 F10.4,F6.2,t99,i5,2x,A30)
@@ -6320,12 +6331,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ******************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,41) IOBS,OBS0,OBSB,V,VSD,NAME1,NAME2
 *41           FORMAT (' ',I6,' DN',F14.3,F18.3,F21.3,F8.1,
 *    &                2(1X,A30))
               WRITE (LUNIT,41) IOBS,OBS0,OBSB,V,VSD,
-     &                         isssn,name1,jsssn,name2	      
+     &                         isssn,name1,jsssn,name2
  41           FORMAT (' ',I6,' DN',F14.3,F18.3,F21.3,F8.1,
 ** v 4.29i
 *    &                2(1X,i5,2x,A30))
@@ -6333,8 +6344,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 **********************************
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6346,22 +6357,22 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,451) IOBS,OBS0,GMDE,RN,NAME1,NAME2
 *451          FORMAT (' ',I6,' DO',F15.4,F12.4,F18.2,2(1X,A30))
               WRITE (LUNIT,451) IOBS,OBS0,GMDE,RN,
-     &                          isssn,name1,jsssn,name2	      
+     &                          isssn,name1,jsssn,name2
  451          FORMAT (' ',I6,' DO',F15.4,F12.4,F18.2,
 ** v 4.29i
 *    &                 2(1x,i5,2x,a30)) 
@@ -6369,12 +6380,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ******************************* 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,452) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,NAME2
 *452          FORMAT (' ',I6,' DO',F15.4,F17.4,F19.3,F8.2,F8.2,
 *    &                 F10.4,F6.2,4X,A30)
               WRITE (LUNIT,452) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,
-     &	                             jsssn,name2 
+     &                               jsssn,name2 
  452          FORMAT (' ',I6,' DO',F15.4,F17.4,F19.3,F8.2,F8.2,
 ** v 4.29i
 *    &                 F10.4,F6.2,t99,i5,2x,A30)
@@ -6382,12 +6393,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,45) IOBS,OBS0,OBSB,V,VSD,NAME1,NAME2
 *45           FORMAT (' ',I6,' DO',F14.3,F18.3,F21.3,F8.1,
 *    &                2(1X,A30))
               WRITE (LUNIT,45) IOBS,OBS0,OBSB,V,VSD,
-     &                         isssn,name1,jsssn,name2	      
+     &                         isssn,name1,jsssn,name2
  45           FORMAT (' ',I6,' DO',F14.3,F18.3,F21.3,F8.1,
 ** v 4.29i
 *    &                2(1X,i5,2x,A30))
@@ -6395,8 +6406,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ***********************************     
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6408,34 +6419,34 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
         IF (LVC) THEN
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,491) IOBS,OBS0,GMDE,RN,NAME1,NAME2
 *491          FORMAT (' ',I6,' DE',F15.4,F12.4,F18.2,2(1X,A30))
               WRITE (LUNIT,491) IOBS,OBS0,GMDE,RN,
-     &                          isssn,name1,jsssn,name2	      
+     &                          isssn,name1,jsssn,name2
  491          FORMAT (' ',I6,' DE',F15.4,F12.4,F18.2,
 ** v 4.29i
 *    &                2(1x,i5,2x,a30)) 
      &                2(1x,'(',i5,')',1x,a30)) 
-***********************	    
+***********************
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,492) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,NAME2 
 *492          FORMAT (' ',I6,' DE',F15.4,F17.4,F19.3,F8.2,F8.2,
 *    &                 F10.4,F6.2,4X,A30)
               WRITE (LUNIT,492) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN, 
-     &                           jsssn,name2	      
+     &                           jsssn,name2
  492          FORMAT (' ',I6,' DE',F15.4,F17.4,F19.3,F8.2,F8.2,
 ** v 4.29i
 *    &                 F10.4,F6.2,t99,i5,2x,A30)
@@ -6443,12 +6454,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ******************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,49) IOBS,OBS0,OBSB,V,VSD,NAME1,NAME2
 *49           FORMAT (' ',I6,' DE',F14.3,F18.3,F21.3,F8.1,
 *    &                2(1X,A30))
               WRITE (LUNIT,49) IOBS,OBS0,OBSB,V,VSD,
-     &                         isssn,name1,jsssn,name2	      
+     &                         isssn,name1,jsssn,name2
  49           FORMAT (' ',I6,' DE',F14.3,F18.3,F21.3,F8.1,
 ** v 4.29i
 *    &                2(1X,i5,2x,A30))
@@ -6456,8 +6467,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *********************************
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
         ENDIF
 
@@ -6469,21 +6480,21 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
           IF (DABS(VSD3) .GE. CRIT) THEN
-	    lc = .true.
+            lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,771) IOBS,OBS0,GMDE,RN,NAME1,NAME2
 *771          FORMAT (' ',I6,' CP-N',F13.4,F11.3,F19.2,2(1X,A30))
               WRITE (LUNIT,771) IOBS,OBS0,GMDE,RN,
-     &                          isssn,name1,jsssn,name2	      
+     &                          isssn,name1,jsssn,name2
  771          FORMAT (' ',I6,' CP-N',F13.4,F11.3,F19.2,
 ** v 4.29i
 *    &                2(1x,i5,2x,a30)) 
@@ -6491,12 +6502,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ********************************** 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,772) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,NAME2
 *772          FORMAT (' ',I6,' CP-N',F13.4,F17.4,F19.3,F8.2,F8.2,F10.4,
 *    &                F6.2,4X,A30)
               WRITE (LUNIT,772) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,
-     &                          jsssn,name2	      
+     &                          jsssn,name2
  772          FORMAT (' ',I6,' CP-N',F13.4,F17.4,F19.3,F8.2,F8.2,F10.4,
 ** v 4.29i
 *    &                F6.2,t99,i5,2x,A30)
@@ -6504,12 +6515,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *********************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,77) IOBS,OBS0,OBSB,V,VSD,NAME1,NAME2
 * 77          FORMAT (' ',I6,' CP-N',F12.3,F18.3,F21.3,
 *    &                F8.1,2(1X,A30))
               WRITE (LUNIT,77) IOBS,OBS0,OBSB,V,VSD,
-     &	                       isssn,name1,jsssn,name2      
+     &                         isssn,name1,jsssn,name2      
   77          FORMAT (' ',I6,' CP-N',F12.3,F18.3,F21.3,
 ** v 4.29i
 *    &                F8.1,2(1X,i5,2x,A30))
@@ -6517,8 +6528,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *****************************
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
 
 *** CONSTRAINED EAST COORD DIFFERENCE
@@ -6529,19 +6540,19 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
         VSD = V/SD
         VSD3 = DIVID(V,SD3)
         IF (LSS) VSD = VSD/SIGUWT
-	
+
 ***** ver 4.28n
         IF (LSS) SD3 = SD3/SIGUWT
         IF (LSS) VSD3 = VSD3/SIGUWT
 ************
-	
+
           IF (DABS(VSD3) .GE. CRIT) THEN
-	  lc = .true.
+          lc = .true.
             CALL LINE2 (1)
             IF (IMODE .EQ. 0) THEN
-** v 4.29f	    
+** v 4.29f
               WRITE (LUNIT,871) IOBS,OBS0,GMDE,RN,
-     &                             isssn,name1,jsssn,name2	      
+     &                             isssn,name1,jsssn,name2
  871          FORMAT (' ',I6,' CP-E',F13.4,F11.3,F19.2,
 ** v 4.29i
 *    &                 2(1x,i5,2x,a30)) 
@@ -6549,12 +6560,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ***************************** 
  
             ELSEIF (IMODE .EQ. 3) THEN
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,872) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,NAME2
 *872          FORMAT (' ',I6,' CP-E',F13.4,F17.4,F19.3,F8.2,F8.2,F10.4,
 *    &                F6.2,4X,A30)
               WRITE (LUNIT,872) IOBS,OBS0,OBSB,V,SD3,VSD3,GMDE,RN,
-     &                jsssn,name2	      
+     &                jsssn,name2
  872          FORMAT (' ',I6,' CP-E',F13.4,F17.4,F19.3,F8.2,F8.2,F10.4,
 ** v 4.29i
 *    &                F6.2,t99,i5,2x,A30)
@@ -6562,12 +6573,12 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 *****************************
      
             ELSE
-** v 4.29f	    
+** v 4.29f
 *             WRITE (LUNIT,87) IOBS,OBS0,OBSB,V,VSD,NAME1,NAME2
 * 87          FORMAT (' ',I6,' CP-E',F12.3,F18.3,F21.3,
 *    *                F8.1,2(1X,A30))
               WRITE (LUNIT,87) IOBS,OBS0,OBSB,V,VSD,
-     &	                        isssn,name1,jsssn,name2
+     &                          isssn,name1,jsssn,name2
   87          FORMAT (' ',I6,' CP-E',F12.3,F18.3,F21.3,
 ** v 4.29i
 *    &                F8.1,2(1X,i5,2x,A30))
@@ -6575,8 +6586,8 @@ c  292             FORMAT (' ',6X, A3, 32x , F20.4, F9.4)
 ********************************
      
             ENDIF
-	  else
-	    lc = .false.
+          else
+            lc = .false.
           ENDIF
 
 *** ILLEGAL KIND
@@ -7506,7 +7517,7 @@ c End of changes 10/26/08
             VDZMIN = VXX
             IDZMIN = IXX
          ENDIF
-** v 4.29h	 
+** v 4.29h
       ELSEIF(KIND .EQ. 90) THEN
          IF(VDNMAX .LT. VXX) THEN
             VDNMAX = VXX
@@ -7534,19 +7545,19 @@ c End of changes 10/26/08
             VDUMIN = VXX
             IDUMIN = IXX
          ENDIF
-**v 4.29f	 
+**v 4.29f
       ELSEIF(KIND .EQ. 93) THEN
          IF(VDLMAX .LT. VXX) THEN
             VDLMAX = VXX
             IDLMAX = IXX
          ENDIF
 **************************
-** v 4.29g	 
+** v 4.29g
          IF(VDLMIN .GT. VXX) THEN
             VDLMIN = VXX
             IDLMIN = IXX
          ENDIF
-******************	 
+******************
       ENDIF
 
       RETURN
@@ -7988,7 +7999,7 @@ C  Done with unit conversion from cm to mm (the way it was before the modificati
           KIND = 3
           NCON = NCON+1
           IOBS = IOBS+1
-**deleted out for v 4.28 and put back in for v 4.29j	  
+**deleted out for v 4.28 and put back in for v 4.29j
           IF (ACODE.EQ.'E'.OR.ACODE.EQ.'e') THEN
             EHB = HT
           ELSEIF (ELFLAG(ISN)) THEN
@@ -8059,7 +8070,7 @@ C  Done with unit conversion from cm to mm (the way it was before the modificati
 *         WRITE (IUO) KIND,ISN,IDUMMY,IC,C,LENG,CMO,OBSB,SDHT,IOBS,IVF,
 *    &                IAUX,IGRT
 *       ENDIF
-*	
+*
 ****************************
 
 
@@ -8839,7 +8850,7 @@ c Keep the f90 compiler from complaining
 ** v 4.28*****************
       IVC = 1
 **************************
-*** 8-20-02	
+*** 8-20-02
         CCFLAG = .FALSE.
         CVFLAG = .FALSE.
 *************************
@@ -8865,7 +8876,7 @@ c Keep the f90 compiler from complaining
 
       IF (ID .EQ. 'B') THEN
         NOB = NOB + 1
-*** 8-20-02	
+*** 8-20-02
 *       CCFLAG = .FALSE.
 *       CVFLAG = .FALSE.
 **********************8-26-02
@@ -8890,7 +8901,7 @@ c The scratch file IUO3 is being used to identify rejected vectors
      &                  IYR2, IMO2, IDY2, IHR2, IMN2
    10   FORMAT (BZ,1X,2(I4,4I2))
         READ (GCARD,110) NVEC, I83, PROJID
-  110   FORMAT (25X,I2,24X,I2,T91, A13)	
+  110   FORMAT (25X,I2,24X,I2,T91, A13)
         TC = 'Z'
         ICODE = 25
 
@@ -8924,13 +8935,13 @@ c The scratch file IUO3 is being used to identify rejected vectors
         elseif (I83 .ge. 15 .and. I83 .le. 17) then
             I83 = 15
         elseif (I83 .eq. 18) then
-            I83 = 18	    
+            I83 = 18
         elseif (I83 .eq. 19) then
-            I83 = 19	    
-	  elseif (I83 .eq. 20) then
-	    I83 = 19    
+            I83 = 19
+          elseif (I83 .eq. 20) then
+            I83 = 19
         elseif (I83 .ge. 21 .and. I83 .le. 24) then
-	    I83 = 21
+            I83 = 21
 c   this is new code 11/6/07
         elseif (I83 .eq. 26) then
 **         Do not do anything
@@ -8954,6 +8965,9 @@ c   this is new code 11/6/07
 **         Do not do anything
         elseif (I83 .eq. 36) then
 **         Do not do anything
+c   this is new code 2020/5/12
+        elseif (I83 .eq. 37) then
+**         Do not do anything
         endif
 
         NR = 3*NVEC
@@ -8970,8 +8984,8 @@ c Mike Potterfield 2/13/06
 c For each GPS solution, write PROJID and then for each vector
 c write the reject code to IUO3
       WRITE(IUO3) PROJID
-	
-**v 4.28***************	
+
+**v 4.28***************
         CALL NEWGRP (NVEC, IUNIT, G, NR, NC, FULL, ICM, NICM, KINDS,
 *    &               ISNS, JSNS, LOBS, IOBS, IAUX, B, NVECS, IGRT, I83)
      &               ISNS, JSNS, LOBS, IOBS, IAUX, B, NVECS, IGRT, I83,
@@ -8999,7 +9013,7 @@ c write the reject code to IUO3
           CALL ABORT2
         ELSE
           CALL LOADCR (G, GCARD, NR, NC)
-**** 8-20-02	  
+**** 8-20-02
 *         CCFLAG = .TRUE.
 *         CVFLAG = .FALSE.
           CCFLAG = .TRUE.
@@ -9010,17 +9024,17 @@ c write the reject code to IUO3
 ** 8-20-02
 *       IF (.NOT.CVFLAG.AND.CCFLAG) THEN
         IF (CCFLAG) THEN
-******************	
+******************
           WRITE(LUNIT,30) GCARD
           write (lunit,*) 'subs2, 84'
           CALL ABORT2
         ELSE
           CALL LOADCV (G, GCARD, NR, NC)
-**  8-20-02	  
+**  8-20-02
 *         CCFLAG = .TRUE.
 *         CVFLAG = .TRUE.
           CVFLAG = .TRUE.
-***************************	  
+***************************
         ENDIF
       ENDIF
 
@@ -10638,18 +10652,18 @@ C-------------------------------------------------------------------------------
       
       IF(I3.EQ.1) THEN
          DO 20 I = I1,I2
-	   IF(INDEX(DIGITS,RECORD(I:I)).EQ.0) THEN
-	      VALCH1 = .FALSE.
-	      RETURN
-	   ENDIF
+           IF(INDEX(DIGITS,RECORD(I:I)).EQ.0) THEN
+              VALCH1 = .FALSE.
+              RETURN
+           ENDIF
  20      CONTINUE
       ELSEIF(I3.EQ.9) THEN
          IF((RECORD(I1:I2).NE.'18').AND.
      *     (RECORD(I1:I2).NE.'19').AND.
      *     (RECORD(I1:I2).NE.'20')) THEN
              VALCH1 = .FALSE.
-	     RETURN
-	 ENDIF 
+             RETURN
+         ENDIF 
       ENDIF
       END
       
@@ -10729,7 +10743,7 @@ C-------------------------------------------------------------------------------
         IF (BCARD(46:47) .EQ. '  ') IHR = 0
         IF (BCARD(48:49) .EQ. '  ') IMN = 0
         IF (BCARD(50:50) .EQ. ' ') TC = 'Z'
-	CALL GETYR(BCARD,IYR)
+        CALL GETYR(BCARD,IYR)
 *       IYR = IYR + 1900
       ELSE
         READ (BCARD,6) IHR, IMN, TC

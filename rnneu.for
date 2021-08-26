@@ -135,8 +135,8 @@ C      SCCSID='$Id: rnneu.for 44197 2010-07-13 12:26:03Z bruce.tran $	20$Date: 2
         CALL GETGLO (GLO2, JSN, B)
 
 *** COMPUTE MEAN ORIENTATION
-        GLA = (GLA1 + GLA2)/2.D0	
-        GLO = (GLO1 + GLO2)/2.D0	
+        GLA = (GLA1 + GLA2)/2.D0
+        GLO = (GLO1 + GLO2)/2.D0
 
         SB = DSIN(GLA)
         CB = DCOS(GLA)
@@ -178,7 +178,7 @@ C
               ENDIF
               TERM1= RM(I,L)*A(NB1+K)
               WORK1(I,J)=WORK1(I,J)+ TERM1
-  120	WORK2(I,J)=WORK2(I,J)+RM(I,L)*A(NB2+K)
+  120   WORK2(I,J)=WORK2(I,J)+RM(I,L)*A(NB2+K)
         DO 121 I=1,3
           DO 121 J=I,3
             K=INX(II+I,NR)-(II+I) + 3*(IVEC-1) +J
@@ -191,7 +191,7 @@ C
 C   (JVEC>IVEC)  ALL ELEMENTS ARE STORED IN A
         IF (IVEC.LT.NVEC) THEN
 C   COMPUTE R*Q FOR THE OTHER SUBMATRICES IN ROW IVEC
-          DO 140 JVEC=IVEC+1,NVEC	
+          DO 140 JVEC=IVEC+1,NVEC
             DO 130 I=1,3
               DO 130 J=1,3
                 K=INX(II+I,NR)-(II+I) + 3*(JVEC-1) +J

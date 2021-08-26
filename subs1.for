@@ -10,7 +10,7 @@
       DIMENSION A(L,M), B(M,N), R(L,N)
       CHARACTER*99 SCCSID
 
-C      SCCSID='$Id: subs1.for 87172 2016-01-21 15:33:05Z jarir.saleh $	20$Date: 2008/08/25 16:04:51 $ NGS'
+C      SCCSID='$Id: subs1.for 107411 2018-10-30 14:54:00Z jarir.saleh $	20$Date: 2008/08/25 16:04:51 $ NGS'
 
       DO 5 I = 1, L
         DO 4 J = 1, N
@@ -1807,10 +1807,10 @@ C*******************************************************************************
   101 FORMAT(2X,A2)
       IF (CCODE.EQ.'HU') THEN
 C   COMPUTE VARIANCE FACTORS FOR GPS HORIZONTAL AND UP COMPONENTS OF OBSERVATIONS
-		IVCGPS=.TRUE.
-		RETURN
+        IVCGPS=.TRUE.
+        RETURN
       ENDIF
-**********	
+**********
 
       READ (ACARD,1) ICODE, IYR1, IMO1, IDY1, IHR1, IMN1, TC1,
      &                      IYR2, IMO2, IDY2, IHR2, IMN2, TC2, IVAL, CON
@@ -2075,7 +2075,7 @@ C   COMPUTE VARIANCE FACTORS FOR GPS HORIZONTAL AND UP COMPONENTS OF OBSERVATION
         IF (BCARD(46:47) .EQ. '  ') IHR = 0
         IF (BCARD(48:49) .EQ. '  ') IMN = 0
         IF (BCARD(50:50) .EQ. ' ') TC = 'Z'
-	CALL GETYR(BCARD,IYR)
+      CALL GETYR(BCARD,IYR)
 *     IF (IYR .LT. 14) THEN
 *       IYR = IYR + 2000
 *     ELSE
@@ -3278,25 +3278,25 @@ c the dNEU residuals
       
       IF( ISN .NE. ISNX .OR. JSN .NE. JSNX) THEN
         IF ( ISN .NE. ISNX) THEN
-	  CALL GETGLA (GLA1, ISN, B)
-	  CALL GETGLO (GLO1, ISN, B)
+          CALL GETGLA (GLA1, ISN, B)
+          CALL GETGLO (GLO1, ISN, B)
           ISNX = ISN
-	ENDIF
+        ENDIF
         IF ( JSN .NE. JSNX) THEN
-	  CALL GETGLA (GLA2, JSN, B)
-	  CALL GETGLO (GLO2, JSN, B)
+          CALL GETGLA (GLA2, JSN, B)
+          CALL GETGLO (GLO2, JSN, B)
           JSNX = JSN
-	ENDIF
-	
+        ENDIF
+
 *** COMPUTE MEAN ORIENTATION
 
-        GLA = (GLA1 + GLA2)/2.D0	
-        GLO = (GLO1 + GLO2)/2.D0	
-	
-	SB = DSIN(GLA)
-	CB = DCOS(GLA)
-	SL = DSIN(GLO)
-	CL = DCOS(GLO)
+        GLA = (GLA1 + GLA2)/2.D0
+        GLO = (GLO1 + GLO2)/2.D0
+
+        SB = DSIN(GLA)
+        CB = DCOS(GLA)
+        SL = DSIN(GLO)
+        CL = DCOS(GLO)
       ENDIF
       
 *** GET COVARIANCE MATRIX
@@ -3519,7 +3519,7 @@ c  I is always the Z component
         IF (BCARD(41:42) .EQ. '  ') IHR = 0
         IF (BCARD(43:44) .EQ. '  ') IMN = 0
         IF (BCARD(45:45) .EQ. ' ') TC = 'Z'
-	CALL GETYR(BCARD,IYR)
+        CALL GETYR(BCARD,IYR)
 *       IYR = IYR+1900
         IF ( .NOT. GETSSN(ISSN, ISN) ) THEN
           CALL LINE (3)
@@ -3963,25 +3963,25 @@ c  I is always the Z component
          CALL ABORT2
          ELSE
          READ (BCARD,30) ICBEG,IYBEG,ICEND,IYEND
- 30	 FORMAT (10X,I2,I2,2X,I2,I2)
+ 30      FORMAT (10X,I2,I2,2X,I2,I2)
  
          IF(((ICEND*100)+IYEND).LT.((ICBEG*100)+IYBEG)) THEN
-	   WRITE (LUNIT,35) BCARD
+           WRITE (LUNIT,35) BCARD
  35        FORMAT (/' ',A80/' ***ERROR - B-FILE *12* END YEAR',
      *     ' CC 17-20 IS LESS THAN BEGAN YEAR CC 11-14'/)
-	   CALL ABORT2
+           CALL ABORT2
          ENDIF
          IF(((ICEND*100)+IYEND)-((ICBEG*100)+IYBEG).GE. 100) THEN
-	   WRITE (LUNIT,40) BCARD
+           WRITE (LUNIT,40) BCARD
  40        FORMAT (/' ',A80/' ***ERROR - B-FILE *12* END YEAR',
      *     ' CC 17-20 EXCEEDS BEGAN YEAR CC 11-14 BY MORE THAN 99'/)
-	   CALL ABORT2
+           CALL ABORT2
          ENDIF
-	 ENDIF	   
+         ENDIF
       
          RETURN
-	 END
-	  
+         END
+          
       SUBROUTINE FIR20 (BCARD)
 
 *** FIRST PASS OF DIRECTION SET RECORDS
@@ -4498,7 +4498,7 @@ c End of changes 4/2/08
           if(gfile .ne. 'nogfile') then
           if(gfile .ne. 'NOGFILE') then
 *************
-	
+
         IGPS = 13
        
         OPEN (IGPS,ERR=920,STATUS='OLD',FILE=GFILE)
@@ -4566,11 +4566,11 @@ c End of changes 4/2/08
 
 *** IF 2.5DIM ADJUSTMENT, SET ISN'S IN I2HLF TO 1
 
-* v 4.28j***********	
+* v 4.28j***********
 *       IF ( L2HLF  .AND.  CC1 .EQ. 'C' ) THEN
         if (l2hlf) then
-	 if( cc1 .eq. 'F' .or. cc1 .eq. 'C') then
-*********************	 
+         if( cc1 .eq. 'F' .or. cc1 .eq. 'C') then
+*********************
           READ (GCARD,27) ISSN, JSSN
    27     FORMAT (1X, 2I4)
           IF ( GETSSN(ISSN, ISN)  .AND.  GETSSN(JSSN, JSN) ) THEN
@@ -4582,7 +4582,7 @@ c End of changes 4/2/08
      &              /, A80)
             CALL ABORT2
           ENDIF
-	 endif
+         endif
         ENDIF
 *******3-28 del**************************************
 *****       IF(CC1 .EQ. 'D' .OR. CC1 .EQ. 'E') THEN
@@ -6205,15 +6205,28 @@ C-------------------------------------------------------------------------------
 
       RETURN
       END
+      
       SUBROUTINE FROM83 (I83, X83, Y83, Z83, X, Y, Z)
 
 *** CONVERT X,Y,Z FROM ADJUSTMENT DATUM
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z)
       IMPLICIT INTEGER (I-N)
-      COMMON /XLATE/  RX(36), RY(36), RZ(36), SCALE(36),
-     +             DELX(36), DELY(36), DELZ(36), COSRX(36), SINRX(36),
-     +             COSRY(36), SINRY(36), COSRZ(36), SINRZ(36)
+      COMMON /UNITS/ LUNIT
+      COMMON /XLATE/  RX(37), RY(37), RZ(37), SCALE(37),
+     +             DELX(37), DELY(37), DELZ(37), COSRX(37), SINRX(37),
+     +             COSRY(37), SINRY(37), COSRZ(37), SINRZ(37)
+     
+*** Abort program if reference system code greater than parameter array size.
+      IF (I83 .GT. 37) THEN
+        WRITE (LUNIT,1)
+    1   FORMAT (1X, 130('*'))
+        WRITE (LUNIT,2) I83
+    2   FORMAT (' ERROR: UNDEFINED COORDINATE REFERENCE SYSTEM CODE = ',
+     &          I2,' IN G-FILE.')
+        WRITE (LUNIT,1)
+        CALL ABORT2
+      ENDIF
 
 *** DO THE TRANSLATION
 
@@ -6253,16 +6266,29 @@ C-------------------------------------------------------------------------------
 
       RETURN
       END
+      
       SUBROUTINE GET83 (I83, XOLD, YOLD, ZOLD, XNEW, YNEW, ZNEW)
 
 *** CONVERT X,Y,Z TO ADJUSTMENT DATUM
 
       IMPLICIT DOUBLE PRECISION (A-H, O-Z)
       IMPLICIT INTEGER (I-N)
-      COMMON /XLATE/  RX(36), RY(36), RZ(36), SCALE(36),
-     +             DELX(36), DELY(36), DELZ(36), COSRX(36), SINRX(36),
-     +             COSRY(36), SINRY(36), COSRZ(36), SINRZ(36)
+      COMMON /UNITS/ LUNIT
+      COMMON /XLATE/  RX(37), RY(37), RZ(37), SCALE(37),
+     +             DELX(37), DELY(37), DELZ(37), COSRX(37), SINRX(37),
+     +             COSRY(37), SINRY(37), COSRZ(37), SINRZ(37)
 
+*** Abort program if reference system code greater than parameter array size.
+      IF (I83 .GT. 37) THEN
+        WRITE (LUNIT,1)
+    1   FORMAT (1X, 130('*'))
+        WRITE (LUNIT,2) I83
+    2   FORMAT (' ERROR: UNDEFINED COORDINATE REFERENCE SYSTEM CODE = ',
+     &          I2,' IN G-FILE.')
+        WRITE (LUNIT,1)
+        CALL ABORT2
+      ENDIF
+      
 *** DO THE TRANSLATION
 
       X = XOLD + DELX(I83)
@@ -7131,14 +7157,14 @@ C-----------------------------------------------------------------------------
          IYR = ICBEG*100 + IYR
       ELSE
          IB = IYR-IYBEG
-	 IF(IB.LT.0) IB = -IB
-	 IE = IYR-IYEND
-	 IF(IE.LT.0) IE = -IE
-	 IF(IB.LE.IE) THEN
-	   IYR = ICBEG*100 + IYR
-	 ELSE
-	   IYR = ICEND*100 + IYR
-	 ENDIF
+         IF(IB.LT.0) IB = -IB
+         IE = IYR-IYEND
+         IF(IE.LT.0) IE = -IE
+         IF(IB.LE.IE) THEN
+           IYR = ICBEG*100 + IYR
+         ELSE
+           IYR = ICEND*100 + IYR
+         ENDIF
       ENDIF
       IF((IYR.LT.(ICBEG*100+IYBEG)).OR.
      *(IYR.GT.(ICEND*100+IYEND))) THEN
@@ -7340,7 +7366,7 @@ C-----------------------------------------------------------------------------
       PARAMETER (MAXPRJ=2500)
       COMMON/VSREC/SIGHS(MAXPRJ), SIGUS(MAXPRJ), ISETHU, VSPROJ(MAXPRJ),
      &             VSlogic
-********	
+********
       COMMON/UNITS/ LUNIT
 
 *** LENGTH OF COEFF. ARRAYS
@@ -7410,20 +7436,20 @@ C-----------------------------------------------------------------------------
 
         IDEX = INX(IROW,NR)
         A(IDEX+NB1) = VARL0
-** v 4.30vf **************************************	
+** v 4.30vf **************************************
 C       IF (IROW .EQ. 1) THEN
 C         VARLB = G(1,1)*G(1,1)
 C       ELSE
 C         VARLB = G(IROW,1)
 C       ENDIF
         VARLB=G(IROW,N5)**2
-*****	  IF (ISETHU.OR.IVCGPS) THEN
+*****     IF (ISETHU.OR.IVCGPS) THEN
 
           IF(ISETHU .GT. 0 .OR. IVCGPS) THEN
 
 C  get variance of observation from the Cholesky factor
           VARLB=0.0
-	    DO 55 I=1,IROW
+            DO 55 I=1,IROW
    55     VARLB=VARLB+G(I,IROW)**2
          ENDIF
 ***************************************************
@@ -7612,7 +7638,7 @@ C  get variance of observation from the Cholesky factor
 
       IF (IMODE.EQ.0) THEN
         WRITE (LUNIT,1)
-** v 4.29f	
+** v 4.29f
 *1      FORMAT ('0SIMULATION'/T18,'COMPUTED',T30,'MDE(3-SIGMA)',
 *    &           T50,'RN',T57,'FROM STATION',T89,'TO STATION', 
 *    &           /T57,'SESSION ID')
@@ -7903,7 +7929,7 @@ C  get variance of observation from the Cholesky factor
         IF (BCARD(46:47) .EQ. '  ') IHR = 0
         IF (BCARD(48:49) .EQ. '  ') IMN = 0
         IF (BCARD(50:50) .EQ. ' ') TC = 'Z'
-	CALL GETYR(BCARD,IYR)
+        CALL GETYR(BCARD,IYR)
 *       IF (IYR .LT. 14) THEN
 *         IYR = IYR+2000
 *       ELSE

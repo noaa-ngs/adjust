@@ -54,7 +54,7 @@ C      SCCSID='$Id: obseqw.for 65375 2012-09-20 15:10:51Z jarir.saleh $	20$Date:
         G(I,N5+1) = G(I,I+1)
         G(I+1,N5+1) = G(I+1,I+2)
         G(I+2,N5+1) = G(I,I+2)
-  100 CONTINUE	 
+  100 CONTINUE
 
 ******
 *******************3-27*****************
@@ -86,7 +86,7 @@ C
       IF (ISETHU.GT.0) THEN
         DO 85 I=1,ISETHU
           IF(PROJID.EQ.VSPROJ(I)) THEN
- 	    CALL SCALEG (G, NR, NC, LENG,N1,N2,N3,N4,N5, NVEC, B,
+            CALL SCALEG (G, NR, NC, LENG,N1,N2,N3,N4,N5, NVEC, B,
      &                   KINDS, ISNS, JSNS, SIGHS(I),SIGUS(I))
             GO TO 86
           ENDIF
@@ -233,8 +233,8 @@ C
       CALL GETGLO (GLO2, JSN, B)
 
 *** COMPUTE MEAN ORIENTATION
-      GLA = (GLA1 + GLA2)/2.D0	
-      GLO = (GLO1 + GLO2)/2.D0	
+      GLA = (GLA1 + GLA2)/2.D0
+      GLO = (GLO1 + GLO2)/2.D0
 
       SB = DSIN(GLA)
       CB = DCOS(GLA)
@@ -292,7 +292,7 @@ C
         DO 55 J=1,NR
           JC=MOD(J-1,3)+1
           IF (IR .EQ. 1 .OR. IR .EQ.2) THEN 
-	    G(I,J)=G(I,J)*SFHOR
+            G(I,J)=G(I,J)*SFHOR
           ELSE
             G(I,J)=G(I,J)*SFUP
           ENDIF
@@ -315,8 +315,8 @@ C
         CALL GETGLO (GLO2, JSN, B)
 
 *** COMPUTE MEAN ORIENTATION
-        GLA = (GLA1 + GLA2)/2.D0	
-        GLO = (GLO1 + GLO2)/2.D0	
+        GLA = (GLA1 + GLA2)/2.D0
+        GLO = (GLO1 + GLO2)/2.D0
 
         SB = DSIN(GLA)
         CB = DCOS(GLA)

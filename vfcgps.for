@@ -387,7 +387,7 @@ C
 ***  STEP 6.  COMPUTE V-HAT-H AND V-HAT U
 C     multiply the columns of GPSVS by R(inverse)(transpose), where R is the 
 C     upper Cholesky factor of the covariance matrix of the 
-C	observatios for this session.
+C       observatios for this session.
 C
       CALL CMRHS3(G,NR,GPSVS,3*NVECS,1)
 C

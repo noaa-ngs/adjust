@@ -12,9 +12,9 @@
 *             IN THE NATIONAL GEODETIC SURVEY DATA BASE               *
 *             INPUT FORMATS (BLUE-BOOK, REVISED, JAN 1989 VERSION).   *
 *                                                                     *
-* VERSION CODE:  6.4.2 
+* VERSION CODE:  6.4.3 
 *                                                                     *
-* VERSION DATE:  (ccyy/mm/dd)  2017/11/06
+* VERSION DATE:  (ccyy/mm/dd)  2020/05/13
 *                                                                     *
 *       AUTHORS:   ALICE R. DREW                                      *
 *                  N/CG12X2                                           *
@@ -120,9 +120,9 @@
       LAWORK = LENA
 
 *** DEFINE CONSTANTS
-      SCCSID='@(#)adjust.for	6.4.2 	2017/11/06 NGS'
-      PGMVER='6.4.2'
-      PGMDAT='2017/11/06'
+      SCCSID='@(#)adjust.for	6.4.3 	2020/05/13 NGS'
+      PGMVER='6.4.3'
+      PGMDAT='2020/05/13'
 
       PI2 = 2.D0*DATAN(1.D0)
       PI = 2.D0*PI2
@@ -201,11 +201,11 @@ c     WRITE (*,20) DFILE
 *** use with PC compiler
 *** The following statement is non-standard fortran!!
 *** Use it only with the WATCOM Compiler!!
-* 	!DEC$ IF DEFINED (WATCOM)
+*       !DEC$ IF DEFINED (WATCOM)
 *     OPEN ( UNIT=LUNIT, CARRIAGECONTROL='YES', FILE=ADJOUT)
-*	!DEC$ ELSE IF DEFINED (DF)
+*       !DEC$ ELSE IF DEFINED (DF)
 *     OPEN ( UNIT=LUNIT, CARRIAGECONTROL='FORTRAN', FILE=ADJOUT)
-*	!DEC$ ENDIF
+*       !DEC$ ENDIF
 
 *** use with sun compiler
 *      OPEN (LUNIT,FILE=ADJOUT,STATUS='NEW',
@@ -228,11 +228,11 @@ c     WRITE (*,20) DFILE
       REWIND IUO2
 
 ***  DEFINE UNITS FOR NETWORK AND LOCAL ACCURACY COMPUTATIONS
-	NLUN1=18
-	NLUN2=19
-	NLUN3=20 
-	NLUN4=21
-	NLUN5=22 
+      NLUN1=18
+      NLUN2=19
+      NLUN3=20 
+      NLUN4=21
+      NLUN5=22 
 
 *** SET PAGE PARAMETERS AND PRINT FIRST HEADING
 
