@@ -63,7 +63,7 @@ C
 
       INTRINSIC DATE_AND_TIME
 
-C      SCCSID='$Id: sysdep_g77.for 44197 2010-07-13 12:26:03Z bruce.tran $	20$Date: 2007/11/30 11:30:55 $ NGS'
+C      SCCSID='$Id: sysdep_g77.for 90675 2016-06-09 18:46:41Z bruce.tran $	20$Date: 2007/11/30 11:30:55 $ NGS'
 
 C
 C.........  1.0  GET SYSTEM TIME
@@ -83,7 +83,7 @@ C Parse to components
       READ (TIMEC(1:2),'(I2)') IHR
       READ (TIMEC(3:4),'(I2)') IMI
       READ (TIMEC(5:6),'(I2)') ISEC
-      READ (TIMEC(8:9),'(F2)') DECSEC
+      READ (TIMEC(8:9),'(F2.0)') DECSEC
 
       SEC = DBLE(ISEC) + DECSEC/100.0
 

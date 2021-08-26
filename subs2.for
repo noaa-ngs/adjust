@@ -29,7 +29,7 @@ C file $RCSfile: subs2.for,v $
       COMMON/UNITS/ LUNIT
       SAVE ITIME, IYR, IMO, IDY
 
-C      SCCSID='$Id: subs2.for 83318 2015-05-28 15:50:02Z jarir.saleh $	20$Date: 2008/10/27 17:18:38 $ NGS'
+C      SCCSID='$Id: subs2.for 87172 2016-01-21 15:33:05Z jarir.saleh $	20$Date: 2008/10/27 17:18:38 $ NGS'
 
       READ (BCARD,1) IRT,ISSN,LIST,JSSN,ID,IM,ASS
  1    FORMAT (7X,I2, 1X,I4,    I2,34X,I4, 9X,I3,I2,A4)
@@ -160,9 +160,9 @@ C-------------------------------------------------------------------------------
       IMPLICIT INTEGER (I-N)
  
       COMMON /CONST/  PI, PI2, RAD
-      COMMON /XLATE/  RX(30), RY(30), RZ(30), SCALE(30),
-     +             DELX(30), DELY(30), DELZ(30), COSRX(30), SINRX(30),
-     +             COSRY(30), SINRY(30), COSRZ(30), SINRZ(30)
+      COMMON /XLATE/  RX(36), RY(36), RZ(36), SCALE(36),
+     +             DELX(36), DELY(36), DELZ(36), COSRX(36), SINRX(36),
+     +             COSRY(36), SINRY(36), COSRZ(36), SINRZ(36)
      
       COMMON/UNITS/ LUNIT     
  
@@ -514,6 +514,135 @@ C-------------------------------------------------------------------------------
       DELX(28)  =  0.99343D0  + (0.00079D0 * (T - 1997.0D0))
       DELY(28)  = -1.90331D0  - (0.00060D0 * (T - 1997.0D0))
       DELZ(28)  = -0.52655D0  - (0.00134D0 * (T - 1997.0D0))
+
+*** GPS GFILE CODE '29' ITRF2008 EPOCH 2010 (but t0 = 1997.0) TO NAD83(2011)
+
+      RX(29)    = (25.91467D0 + (0.06667D0 * (T - 1997.0D0))) * AM
+      COSRX(29) = DCOS(RX(29))
+      SINRX(29) = DSIN(RX(29))
+      RY(29)    = ( 9.42645D0 - (0.75744D0 * (T - 1997.0D0))) * AM
+      COSRY(29) = DCOS(RY(29))
+      SINRY(29) = DSIN(RY(29))
+      RZ(29)    = (11.59935D0 - (0.05133D0 * (T - 1997.0D0))) * AM
+      COSRZ(29) = DCOS(RZ(29))
+      SINRZ(29) = DSIN(RZ(29))
+      SCALE(29) = ( 1.71504D0 - (0.10201D0 * (T - 1997.0D0))) * 1.0D-9
+      DELX(29)  =  0.99343D0  + (0.00079D0 * (T - 1997.0D0))
+      DELY(29)  = -1.90331D0  - (0.00060D0 * (T - 1997.0D0))
+      DELZ(29)  = -0.52655D0  - (0.00134D0 * (T - 1997.0D0))
+
+*** GPS GFILE CODE '30' WGS84 (G1674) EPOCH 2005 (but t0 = 1997.0) TO NAD83(2011)
+
+      RX(30)    = (25.91467D0 + (0.06667D0 * (T - 1997.0D0))) * AM
+      COSRX(30) = DCOS(RX(30))
+      SINRX(30) = DSIN(RX(30))
+      RY(30)    = ( 9.42645D0 - (0.75744D0 * (T - 1997.0D0))) * AM
+      COSRY(30) = DCOS(RY(30))
+      SINRY(30) = DSIN(RY(30))
+      RZ(30)    = (11.59935D0 - (0.05133D0 * (T - 1997.0D0))) * AM
+      COSRZ(30) = DCOS(RZ(30))
+      SINRZ(30) = DSIN(RZ(30))
+      SCALE(30) = ( 1.71504D0 - (0.10201D0 * (T - 1997.0D0))) * 1.0D-9
+      DELX(30)  =  0.99343D0  + (0.00079D0 * (T - 1997.0D0))
+      DELY(30)  = -1.90331D0  - (0.00060D0 * (T - 1997.0D0))
+      DELZ(30)  = -0.52655D0  - (0.00134D0 * (T - 1997.0D0))
+
+*** GPS GFILE CODE '31' WGS84 (G1762) EPOCH 2005 (but t0 = 1997.0) TO NAD83(2011)
+
+      RX(31)    = (25.91467D0 + (0.06667D0 * (T - 1997.0D0))) * AM
+      COSRX(31) = DCOS(RX(31))
+      SINRX(31) = DSIN(RX(31))
+      RY(31)    = ( 9.42645D0 - (0.75744D0 * (T - 1997.0D0))) * AM
+      COSRY(31) = DCOS(RY(31))
+      SINRY(31) = DSIN(RY(31))
+      RZ(31)    = (11.59935D0 - (0.05133D0 * (T - 1997.0D0))) * AM
+      COSRZ(31) = DCOS(RZ(31))
+      SINRZ(31) = DSIN(RZ(31))
+      SCALE(31) = ( 1.71504D0 - (0.10201D0 * (T - 1997.0D0))) * 1.0D-9
+      DELX(31)  =  0.99343D0  + (0.00079D0 * (T - 1997.0D0))
+      DELY(31)  = -1.90331D0  - (0.00060D0 * (T - 1997.0D0))
+      DELZ(31)  = -0.52655D0  - (0.00134D0 * (T - 1997.0D0))
+
+*** GPS GFILE CODE '32' ITRF2014 EPOCH 2010 (t0 = 2010.0) TO NAD83(2011)
+
+      RX(32)    = (26.78149969D0 + (0.06668632D0 * (T - 2010.0D0))) * AM
+      COSRX(32) = DCOS(RX(32))
+      SINRX(32) = DSIN(RX(32))
+      RY(32)    = (-0.42078254D0 - (0.75748704D0 * (T - 2010.0D0))) * AM
+      COSRY(32) = DCOS(RY(32))
+      SINRY(32) = DSIN(RY(32))
+      RZ(32)    = (10.93254252D0 - (0.05128851D0 * (T - 2010.0D0))) * AM
+      COSRZ(32) = DCOS(RZ(32))
+      SINRZ(32) = DSIN(RZ(32))
+      SCALE(32) = ( 0.36891D0 - (0.07201D0 * (T - 2010.0D0))) * 1.0D-9
+      DELX(32)  =  1.00530D0  + (0.00079D0 * (T - 2010.0D0))
+      DELY(32)  = -1.90921D0  - (0.00060D0 * (T - 2010.0D0))
+      DELZ(32)  = -0.54157D0  - (0.00144D0 * (T - 2010.0D0))
+
+*** GPS GFILE CODE '33' IGS14 EPOCH 2010 (t0 = 2010.0) TO NAD83(2011)
+
+      RX(33)    = (26.78149969D0 + (0.06668632D0 * (T - 2010.0D0))) * AM
+      COSRX(33) = DCOS(RX(33))
+      SINRX(33) = DSIN(RX(33))
+      RY(33)    = (-0.42078254D0 - (0.75748704D0 * (T - 2010.0D0))) * AM
+      COSRY(33) = DCOS(RY(33))
+      SINRY(33) = DSIN(RY(33))
+      RZ(33)    = (10.93254252D0 - (0.05128851D0 * (T - 2010.0D0))) * AM
+      COSRZ(33) = DCOS(RZ(33))
+      SINRZ(33) = DSIN(RZ(33))
+      SCALE(33) = ( 0.36891D0 - (0.07201D0 * (T - 2010.0D0))) * 1.0D-9
+      DELX(33)  =  1.00530D0  + (0.00079D0 * (T - 2010.0D0))
+      DELY(33)  = -1.90921D0  - (0.00060D0 * (T - 2010.0D0))
+      DELZ(33)  = -0.54157D0  - (0.00144D0 * (T - 2010.0D0))
+
+*** GPS GFILE CODE '34' NAD83 (2011) epoch 2010 TO NAD83(2011)
+
+      RX(34)    = (00.0000000000 + (0.0000000000 * (T - 1997.0D0))) * AM
+      COSRX(34) = DCOS(RX(34))
+      SINRX(34) = DSIN(RX(34))
+      RY(34)    = (00.00000000D0 - (0.00000000D0 * (T - 1997.0D0))) * AM
+      COSRY(34) = DCOS(RY(34))
+      SINRY(34) = DSIN(RY(34))
+      RZ(34)    = (00.00000000D0 - (0.00000000D0 * (T - 1997.0D0))) * AM
+      COSRZ(34) = DCOS(RZ(34))
+      SINRZ(34) = DSIN(RZ(34))
+      SCALE(34) = ( 0.00000D0 - (0.00000D0 * (T - 1997.0D0))) * 1.0D-9
+      DELX(34)  = 00.00000D0  + (0.00000D0 * (T - 1997.0D0))
+      DELY(34)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
+      DELZ(34)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
+
+*** GPS GFILE CODE '35' NAD83 (PA11) TO NAD83(2011)
+
+      RX(35)    = (00.0000000000 + (0.0000000000 * (T - 1997.0D0))) * AM
+      COSRX(35) = DCOS(RX(35))
+      SINRX(35) = DSIN(RX(35))
+      RY(35)    = (00.00000000D0 - (0.00000000D0 * (T - 1997.0D0))) * AM
+      COSRY(35) = DCOS(RY(35))
+      SINRY(35) = DSIN(RY(35))
+      RZ(35)    = (00.00000000D0 - (0.00000000D0 * (T - 1997.0D0))) * AM
+      COSRZ(35) = DCOS(RZ(35))
+      SINRZ(35) = DSIN(RZ(35))
+      SCALE(35) = ( 0.00000D0 - (0.00000D0 * (T - 1997.0D0))) * 1.0D-9
+      DELX(35)  = 00.00000D0  + (0.00000D0 * (T - 1997.0D0))
+      DELY(35)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
+      DELZ(35)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
+
+*** GPS GFILE CODE '36' NAD83 (MA11) TO NAD83(2011)
+
+      RX(36)    = (00.0000000000 + (0.0000000000 * (T - 1997.0D0))) * AM
+      COSRX(36) = DCOS(RX(36))
+      SINRX(36) = DSIN(RX(36))
+      RY(36)    = (00.00000000D0 - (0.00000000D0 * (T - 1997.0D0))) * AM
+      COSRY(36) = DCOS(RY(36))
+      SINRY(36) = DSIN(RY(36))
+      RZ(36)    = (00.00000000D0 - (0.00000000D0 * (T - 1997.0D0))) * AM
+      COSRZ(36) = DCOS(RZ(36))
+      SINRZ(36) = DSIN(RZ(36))
+      SCALE(36) = ( 0.00000D0 - (0.00000D0 * (T - 1997.0D0))) * 1.0D-9
+      DELX(36)  = 00.00000D0  + (0.00000D0 * (T - 1997.0D0))
+      DELY(36)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
+      DELZ(36)  = 00.00000D0  - (0.00000D0 * (T - 1997.0D0))
+
       
       RETURN
       END
@@ -8639,6 +8768,7 @@ C-------------------------------------------------------------------------------
 
       RETURN
       END
+C-----------------------------------------------------------------------------------------------------------------------
       SUBROUTINE SECGPS (IUNIT, IUO, IUO3, IOBS, B, NX, G, FATAL)
 
 c Mike Potterfield 1/10/06
@@ -8787,30 +8917,45 @@ c The scratch file IUO3 is being used to identify rejected vectors
         IF ( .NOT. GETIVF(ICODE, ITIME, IVF) ) IVF = 0
         IF ( .NOT. GETGRT(ICODE, ITIME, IGRT) ) IGRT = 0
 
-        IF (I83 .ge. 7 .and. i83 .le. 11) then
+        IF (I83 .ge. 7 .and. I83 .le. 11) then
             I83 = 5
-        elseif (i83 .ge. 12 .and. i83 .le. 14) then
-            i83 = 12
-        elseif (i83 .ge. 15 .and. i83 .le. 17) then
-            i83 = 15
-        elseif (i83 .eq. 18) then
-            i83 = 18	    
-        elseif (i83 .eq. 19) then
-            i83 = 19	    
-	  elseif (i83 .eq. 20) then
-	    i83 = 19    
-        elseif (i83 .ge. 21 .and. i83 .le. 24) then
-	    i83 = 21
+        elseif (I83 .ge. 12 .and. I83 .le. 14) then
+            I83 = 12
+        elseif (I83 .ge. 15 .and. I83 .le. 17) then
+            I83 = 15
+        elseif (I83 .eq. 18) then
+            I83 = 18	    
+        elseif (I83 .eq. 19) then
+            I83 = 19	    
+	  elseif (I83 .eq. 20) then
+	    I83 = 19    
+        elseif (I83 .ge. 21 .and. I83 .le. 24) then
+	    I83 = 21
 c   this is new code 11/6/07
-        elseif (i83 .eq. 26) then
+        elseif (I83 .eq. 26) then
 **         Do not do anything
-        elseif (i83 .eq. 27) then
+        elseif (I83 .eq. 27) then
 **         Do not do anything
-        elseif (i83 .eq. 28) then
+        elseif (I83 .eq. 28) then
+**         Do not do anything
+        elseif (I83 .eq. 29) then
+**         Do not do anything
+        elseif (I83 .eq. 30) then
+**         Do not do anything
+        elseif (I83 .eq. 31) then
+**         Do not do anything
+        elseif (I83 .eq. 32) then
+**         Do not do anything
+        elseif (I83 .eq. 33) then
+**         Do not do anything
+        elseif (I83 .eq. 34) then
+**         Do not do anything
+        elseif (I83 .eq. 35) then
+**         Do not do anything
+        elseif (I83 .eq. 36) then
 **         Do not do anything
         endif
 
- 	
         NR = 3*NVEC
         IF ( .NOT. L2HLF) THEN
           LENG = (NVEC+1)*IDIM + 1
@@ -9619,6 +9764,7 @@ c to NEWGRP, to keep track of rejected vectors
 
       RETURN
       END
+C----------------------------------------------------------------------------------------------------------
       SUBROUTINE TO83 (DX, DY, DZ, ISN, I83, B)
 
 *** CONVERT GPS VECTOR TO NAD83
@@ -9662,6 +9808,7 @@ c to NEWGRP, to keep track of rejected vectors
 
       RETURN
       END
+C-------------------------------------------------------------------------------------------------------
       SUBROUTINE TOGEO2 (X, Y, Z, GLAT, GLON)
 
 *** CONVERT X, Y, Z INTO GEODETIC LAT, LON

@@ -1,5 +1,5 @@
 C %P%
-* file $RCSfile: mods.for,v $  v_$Revision: 83318 $
+* file $RCSfile: mods.for,v $  v_$Revision: 87172 $
 
       SUBROUTINE ADJST (B, GOOGE, SHIFTS, G, NX, A, LAWORK, LNWORK,
      &                  IUO, IUO2)
@@ -55,7 +55,7 @@ C
 
       DATA ITYPE / 1 /
 
-C      SCCSID='$Id: mods.for 83318 2015-05-28 15:50:02Z jarir.saleh $	20$Date: 2007/11/30 13:11:56 $ NGS'
+C      SCCSID='$Id: mods.for 87172 2016-01-21 15:33:05Z jarir.saleh $	20$Date: 2007/11/30 13:11:56 $ NGS'
 
 *
 *** GET STATION CONNECTION MATRIX FOR USE IN COMPUTING LOCAL ACCURACIES
@@ -1262,7 +1262,7 @@ C-------------------------------------------------------------------------------
     4 FORMAT (7X,A2)
 
       IF (BBID .EQ. '80') THEN
-        BCARD(79:80) = 'BA'                  !correct ellipsoidal height order and class
+C        BCARD(79:80) = 'BA'                  !correct ellipsoidal height order and class
         CALL UP80 (BCARD, B)
       ELSEIF (BBID .EQ. '84') THEN
 *** v 4.29k
@@ -1270,7 +1270,7 @@ C-------------------------------------------------------------------------------
         CONTINUE   
 ***	
       ELSEIF (BBID .EQ. '86') THEN
-        BCARD(54:55) = '41'                  !Correct ellipsoidal height order and class
+C        BCARD(54:55) = '41'                  !Correct ellipsoidal height order and class
         CALL UP86 (BCARD, B)
       ELSEIF (BBID .EQ. JCODE) THEN
         IF (NLMODE) CALL UPNL(INEW)

@@ -38,7 +38,7 @@
            <compilerarg value="-e" />
            <compilerarg value="-DSolaris" />
            <compilerarg value="-DNGS_UNIX_ENV" />
-           <compilerarg value="-fpp" />
+           <!--compilerarg value="-fpp" /-->
            <fileset dir=".">
               <include name="adjust.for" />
               <include name="mods.for" />
@@ -50,7 +50,7 @@
               <include name="fortlib3/getofil_ux.for" />
               <include name="fortlib3/hogk.for" />
               <include name="fortlib3/newhog.for" />
-              <include name="fortlib3/newsubs.for" />
+              <include name="fortlib3/newsubs.F" />
               <include name="fortlib3/obseqw.for" />
               <include name="fortlib3/rgps2.for" />
               <include name="fortlib3/rnneu.for" />
@@ -73,11 +73,11 @@
        <antcall target="backupapp"/>
        <cc name="f77" outtype="executable" subsystem="console" outfile="${executable}">
          <fileset dir="${obj}" includes="*.o"/>
-         <libset dir="${USR_HOME}/lib" libs="nsl,m,socket,dl" />
+         <libset dir="${USR_HOME}/lib" libs="nsl,m,dl" />
        </cc>
     </target>
     <target name="linkallwindows" if="isWindows">
-        <exec executable="g77" >
+        <exec executable="Q:\shared\SDD\Software_Downloads\MinGW\bin\g77" >
            <arg value="-xf77-cpp-input" />
            <arg value="-Wall" />
            <arg value="-ffortran-bounds-check" />
@@ -91,7 +91,7 @@
            <arg value="getofil_ux.for" />
            <arg value="hogk.for" />
            <arg value="newhog.for" />
-           <arg value="newsubs.for" />
+           <arg value="newsubs.F" />
            <arg value="obseqw.for" />
            <arg value="rgps2.for" />
            <arg value="rnneu.for" />
@@ -119,6 +119,9 @@
             <arg value="-s" />
             <arg value="${WRAPPER}" />
             <arg value="${destbindir}/${exe_name}" />
+         </exec>
+         <exec executable="rm" >
+            <arg value="adjust.zip" />
          </exec>
          <antcall target="zip"/>
          <exec executable="banner" >
@@ -166,15 +169,11 @@
            <arg value="fortlib3/getofil_ux.for" />
            <arg value="fortlib3/hogk.for" />
            <arg value="fortlib3/newhog.for" />
-           <arg value="fortlib3/newsubs.for" />
+           <arg value="fortlib3/newsubs.F" />
            <arg value="fortlib3/obseqw.for" />
            <arg value="fortlib3/rgps2.for" />
            <arg value="fortlib3/rnneu.for" />
            <arg value="fortlib3/sysdep_g77.for" />
-           <arg value="fortlib3/sysdep_pc.for" />
-           <arg value="fortlib3/sysdep_ux.for" />
-           <arg value="fortlib3/sysdep_w.for" />
-           <arg value="fortlib3/tmisc.for" />
            <arg value="fortlib3/tolgh2.for" />
            <arg value="fortlib3/upcov.for" />
            <arg value="fortlib3/vfcgps.for" />
