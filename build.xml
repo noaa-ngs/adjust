@@ -111,7 +111,6 @@
 
     <target name="deploy" depends="linkall" if="isUnix">
       <!-- Move executable to deployment directory -->
-      <!-- dev server exe is in build directory -->
       <!-- test/prod exe is moved to /ngs/projects/bluebook/bin -->
          <chmod file="${executable}" perm="775" />
          <antcall target="changegroup"/>
